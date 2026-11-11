@@ -10,6 +10,7 @@ Everything here is original: art, music and sound are ours, and nothing comes fr
 - The element is built in `custom/src/` and bundled to `custom/build/custom.es6.js`, which the site loads on every page.
 - The engine (`custom/src/youth-hockey-27/engine/`) has no DOM or Lit dependency, so the same code runs in the browser and headless in Node for rapid simulation (`npm run sim`).
 - Lit is bundled into the custom build because the site's import map only maps `@haxtheweb/*` for custom code. `@haxtheweb/d-d-d` and `@haxtheweb/rpg-character` stay external and load from the site's build/CDN.
+- Two changes to the scaffold's `custom/rollup.config.js`: the esbuild target is `es2020` (the stock Chrome 64 / Safari 11.1 targets cannot build destructuring), and `../` imports count as local (the stock check only treated `./` as local).
 
 ## Teams
 
