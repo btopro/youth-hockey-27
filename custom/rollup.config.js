@@ -26,7 +26,12 @@ export default {
     // the goal is to be able to correctly reference @haxtheweb / other project bare assets
     // and correctly assess that they are to be treated as 'external'
     // @todo read off of wc-registry.json to make this assessment if local or otherwise need to hit a CDN based copy
-    if (asset.endsWith(inputFile) || asset.startsWith('./') || asset.startsWith(srcDir)) {
+    if (asset.endsWith(inputFile) || asset.startsWith('./') || asset.startsWith('../') || asset.startsWith(srcDir)) {
+      return false;
+    }
+    // the site's import map only maps @haxtheweb/ for custom code, so lit is
+    // bundled in rather than left as a bare import that would not resolve
+    if (/^(lit|lit-html|lit-element|@lit\/)/.test(asset) || /node_modules[\\/](lit|lit-html|lit-element|@lit)[\\/]/.test(asset)) {
       return false;
     }
     return true;
@@ -38,7 +43,9 @@ export default {
     /** Minify JS, compile JS to a lower language target */
     esbuild({
       minify: true,
-      target: ['chrome64', 'firefox67', 'safari11.1'],
+      // esbuild cannot lower destructuring for safari11.1, so the stock
+      // targets fail on ordinary modern code; HAX needs a modern browser anyway
+      target: ['es2020'],
     }),
     /** Bundle assets references via import.meta.url */
     importMetaAssets(),
