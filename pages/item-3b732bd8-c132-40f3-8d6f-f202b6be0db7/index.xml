@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item>
+<id>item-3b732bd8-c132-40f3-8d6f-f202b6be0db7</id>
+<indent>0</indent>
+<location>pages/item-3b732bd8-c132-40f3-8d6f-f202b6be0db7/index.xml</location>
+<slug>age-levels</slug>
+<order>2</order>
+<parent></parent>
+<title>Age levels and the ADM</title>
+<description></description>
+<metadata>
+<created>1794431216</created>
+<updated>1794431216</updated>
+<images>
+</images>
+<videos>
+</videos>
+</metadata>
+<content><![CDATA[<p>The game follows the idea behind USA Hockey's <a href="https://www.admkids.com/">American Development Model (ADM)</a>: kids play on a surface and with a team size that fits them. Smaller ice and fewer players mean more puck touches, more shots, more decisions and more fun.</p>
+<table>
+<thead><tr><th scope="col">Level</th><th scope="col">Surface</th><th scope="col">Players</th><th scope="col">Offsides and icing</th><th scope="col">Body checking</th><th scope="col">Score kept</th></tr></thead>
+<tbody>
+<tr><td>8U</td><td>⅓ ice, cross-ice, small nets</td><td>3 on 3</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>10U</td><td>½ ice, small nets</td><td>4 on 4</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>12U</td><td>½ ice</td><td>3 on 3</td><td>No</td><td>No</td><td>Yes</td></tr>
+<tr><td>14U</td><td>Full ice</td><td>5 on 5</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>16U and 18U</td><td>Full ice</td><td>5 on 5</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>AAA &amp; Beer League</td><td>Full ice</td><td>5 on 5</td><td>Yes</td><td>Yes, plus fights</td><td>Yes</td></tr>
+</tbody>
+</table>
+<p>Game length, skating speed and how good the CPU is all go up with age. At the small-ice levels a buzzer goes off every minute and a half or two, and everybody changes, so everybody plays.</p>
+<p>There's no scoreboard at 8U and 10U. When a kid scores, their parents wave dollar bills in the stands instead.</p>
+<h2>Watch the difference</h2>
+<p>Two CPU games, running on their own. Same teams, different age levels.</p>
+<h3>8U, cross-ice</h3>
+<youth-hockey-27 attract="" level="8U" home="sparkle-selects" away="icers"></youth-hockey-27>
+<h3>16U, full ice</h3>
+<youth-hockey-27 attract="" level="16U" home="sparkle-selects" away="icers"></youth-hockey-27>
+<h2>Learn more about the ADM</h2>
+<ul>
+<li><a href="https://www.admkids.com/">ADM Kids</a>, USA Hockey's site for families about the American Development Model.</li>
+<li><a href="https://portal.usahockey.com/cx/vice-president/hockey-development/8u_parent_guide.pdf">8U parent guide</a> (PDF).</li>
+<li><a href="https://portal.usahockey.com/cx/president/hockey-devlopment/recommended_youth_hockey_program_structure.pdf">Recommended youth hockey program structure</a> (PDF).</li>
+<li><a href="https://cdn1.sportngin.com/attachments/document/0129/4159/ADM_One-Sheet.pdf">The ADM on one page</a> (PDF).</li>
+</ul>]]></content>
+</item>

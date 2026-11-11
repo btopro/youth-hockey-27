@@ -1,8 +1,8 @@
 {
   "id": "6701976f-7a4b-4a46-9d65-ed0202b528a6",
-  "title": "youth-hockey-27",
+  "title": "Youth Hockey '27",
   "author": "",
-  "description": "own course",
+  "description": "A 16-bit youth hockey game where the age level sets the rink and the rules, and the stands show what money and pressure do to kids' sports.",
   "license": "by-sa",
   "metadata": {
     "author": {},
@@ -66,13 +66,108 @@
       "slug": "welcome",
       "order": 0,
       "parent": null,
-      "title": "Welcome to youth-hockey-27",
+      "title": "Play",
       "description": "",
       "metadata": {
         "created": 1794425536,
         "updated": 1794425536
       }
+    },
+    {
+      "id": "item-538ae772-127b-4e63-bcaf-e41e92bd6dd3",
+      "indent": 0,
+      "location": "pages/item-538ae772-127b-4e63-bcaf-e41e92bd6dd3/index.html",
+      "slug": "how-to-play",
+      "order": 1,
+      "parent": null,
+      "title": "How to play",
+      "description": "",
+      "metadata": {
+        "created": 1794431214,
+        "updated": 1794431214,
+        "images": [],
+        "videos": []
+      }
+    },
+    {
+      "id": "item-3b732bd8-c132-40f3-8d6f-f202b6be0db7",
+      "indent": 0,
+      "location": "pages/item-3b732bd8-c132-40f3-8d6f-f202b6be0db7/index.html",
+      "slug": "age-levels",
+      "order": 2,
+      "parent": null,
+      "title": "Age levels and the ADM",
+      "description": "",
+      "metadata": {
+        "created": 1794431216,
+        "updated": 1794431216,
+        "images": [],
+        "videos": []
+      }
+    },
+    {
+      "id": "item-8b1a09b2-59b4-4b3a-8c1b-913d0120d4f2",
+      "indent": 0,
+      "location": "pages/item-8b1a09b2-59b4-4b3a-8c1b-913d0120d4f2/index.html",
+      "slug": "penalties",
+      "order": 3,
+      "parent": null,
+      "title": "Penalties",
+      "description": "",
+      "metadata": {
+        "created": 1794431217,
+        "updated": 1794431217,
+        "images": [],
+        "videos": []
+      }
+    },
+    {
+      "id": "item-28b56b37-d7b1-4294-ae3d-b745dbbf98a4",
+      "indent": 0,
+      "location": "pages/item-28b56b37-d7b1-4294-ae3d-b745dbbf98a4/index.html",
+      "slug": "behind-the-game",
+      "order": 4,
+      "parent": null,
+      "title": "Behind the game",
+      "description": "",
+      "metadata": {
+        "created": 1794431218,
+        "updated": 1794431218,
+        "images": [],
+        "videos": []
+      }
+    },
+    {
+      "id": "item-3e7f0dd5-641a-4c2b-b47c-09d76dea7025",
+      "indent": 0,
+      "location": "pages/item-3e7f0dd5-641a-4c2b-b47c-09d76dea7025/index.html",
+      "slug": "for-families",
+      "order": 5,
+      "parent": null,
+      "title": "For families",
+      "description": "",
+      "metadata": {
+        "created": 1794431219,
+        "updated": 1794431219,
+        "images": [],
+        "videos": []
+      }
+    },
+    {
+      "id": "item-4e90cbd0-c226-46cd-b571-0563248ec1eb",
+      "indent": 0,
+      "location": "pages/item-4e90cbd0-c226-46cd-b571-0563248ec1eb/index.html",
+      "slug": "teams",
+      "order": 6,
+      "parent": null,
+      "title": "The teams",
+      "description": "",
+      "metadata": {
+        "created": 1794431220,
+        "updated": 1794431220,
+        "images": [],
+        "videos": []
+      }
     }
-  ],
-  "location": "/_sites/youth-hockey-27/index.html"
+  ]
 }
