@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>youth-hockey-27</title>
+    <link>https://localhost/youth-hockey-27/</link>
+    <description>own course</description>
+    <copyright>Copyright (C) 2026 https://localhost/youth-hockey-27</copyright>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 11 Nov 2026 19:32:16 GMT</lastBuildDate>
+    <generator>HAXcms NodeJS</generator>
+    <atom:link href="https://localhost/youth-hockey-27/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Play</title>
+      <link>https://localhost/youth-hockey-27/welcome</link>
+      <description>A 16-bit hockey game for the players and families of our association. Pick your team and your age level: the rink, the number of players, the rules and the parents in the stands all change with it. New here? Read how to play , then see why the rink changes with age .</description>
+      <guid>https://localhost/youth-hockey-27/welcome</guid>
+      <pubDate>Wed, 11 Nov 2026 19:32:16 GMT</pubDate>
+    </item>
+    <item>
+      <title>How to play</title>
+      <link>https://localhost/youth-hockey-27/how-to-play</link>
+      <description>Controls Action Keyboard Gamepad Touch Skate Arrow keys Left stick or d-pad Joystick Pass, or switch player on defense Z A PASS Shoot, or poke check on defense X or Space B SHOOT Body check C X CHECK Stick play: hook, lift or tie up V Y STICK Pause P or Esc Start Pause button Save the last 10 seconds as a clip R Select Save clip button One player can play on the keyboard. Up to four players can play with gamepads: on the setup screen, push left or right on a gamepad to move it to a team, and ...</description>
+      <guid>https://localhost/youth-hockey-27/how-to-play</guid>
+      <pubDate>Wed, 11 Nov 2026 21:06:54 GMT</pubDate>
+    </item>
+    <item>
+      <title>Age levels and the ADM</title>
+      <link>https://localhost/youth-hockey-27/age-levels</link>
+      <description>The game follows the idea behind USA Hockey&apos;s American Development Model (ADM) : kids play on a surface and with a team size that fits them. Smaller ice and fewer players mean more puck touches, more shots, more decisions and more fun. Level Surface Players Offsides and icing Body checking Score kept 8U ⅓ ice, cross-ice, small nets 3 on 3 No No No 10U ½ ice, small nets 4 on 4 No No No 12U ½ ice 3 on 3 No No Yes 14U Full ice 5 on 5 Yes Yes Yes 16U and 18U Full ice 5 on 5 Yes Yes Yes AAA &amp;amp; ...</description>
+      <guid>https://localhost/youth-hockey-27/age-levels</guid>
+      <pubDate>Wed, 11 Nov 2026 21:06:56 GMT</pubDate>
+    </item>
+    <item>
+      <title>Penalties</title>
+      <link>https://localhost/youth-hockey-27/penalties</link>
+      <description>Every penalty in the game comes from the USA Hockey rulebook. When the ref calls one, the game stops for a moment to show the ref&apos;s signal and explain the rule. Penalty The rule How it happens in the game Tripping Using your stick, knee or foot to make another player fall. Stick play on the puck carrier. Hooking Using the blade of your stick to pull or hold back another player. Stick play on the puck carrier. Slashing Swinging your stick at another player, even if you only hit their stick or ...</description>
+      <guid>https://localhost/youth-hockey-27/penalties</guid>
+      <pubDate>Wed, 11 Nov 2026 21:06:57 GMT</pubDate>
+    </item>
+    <item>
+      <title>Behind the game</title>
+      <link>https://localhost/youth-hockey-27/behind-the-game</link>
+      <description>This is a game first. It&apos;s also a way to show why the ADM recommendations matter, and to poke at the darker side of youth sports: money, influence and exposure, as opposed to kids just having a great time. The stands Every kid on the ice has their own section of fans, from one to eight. When a kid does something good, their super fans go wild, jumping far higher than anyone around them. When a kid takes a penalty or a big hit, their parents might start a fight with the other kid&apos;s parents. Ex...</description>
+      <guid>https://localhost/youth-hockey-27/behind-the-game</guid>
+      <pubDate>Wed, 11 Nov 2026 21:06:58 GMT</pubDate>
+    </item>
+    <item>
+      <title>For families</title>
+      <link>https://localhost/youth-hockey-27/for-families</link>
+      <description>The thing that helps your kid the most is also the easiest: relax, enjoy watching them, and support them. Cheer for effort, win or lose. Let the coaches coach and the refs ref. Let them have fun with their friends. Resources Y yelling? , from ADM Kids: the difference between cheering and yelling at kids, coaches and officials. Sideline self-regulation tips for parents and caregivers (PDF), from the Positive Coaching Alliance. USA Hockey&apos;s 8U parent guide (PDF). ADM Kids , USA Hockey&apos;s site fo...</description>
+      <guid>https://localhost/youth-hockey-27/for-families</guid>
+      <pubDate>Wed, 11 Nov 2026 21:06:59 GMT</pubDate>
+    </item>
+    <item>
+      <title>The teams</title>
+      <link>https://localhost/youth-hockey-27/teams</link>
+      <description>Four teams, each with home and away kits. All the rosters are made up: invented names and invented numbers. AAAA Sparkle Selects : neon pink, with yellow and blue. B Squad : black and pink. Saber Cats : black and electric green. Icers : navy and white. Every team carries 13 skaters and 2 goalies. Each player has ratings for skating, shooting, passing, stickhandling, checking and stamina, plus coachability and exposure. You can read how those last two work in behind the game .</description>
+      <guid>https://localhost/youth-hockey-27/teams</guid>
+      <pubDate>Wed, 11 Nov 2026 21:07:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

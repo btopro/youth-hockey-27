@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>youth-hockey-27</title>
+  <link href="https://localhost/youth-hockey-27/" rel="self" />
+  <subtitle>own course</subtitle>
+  <updated>2026-11-11T19:32:16.000Z</updated>
+  <author>
+      <name></name>
+  </author>
+  <id>https://localhost/youth-hockey-27/</id>
+  
+  <entry>
+    <title>Play</title>
+    <id>item-ba432571-b2a5-430a-9260-afb8fbf1d218</id>
+    <updated>2026-11-11T19:32:16.000Z</updated>
+    <published>2026-11-11T19:32:16.000Z</published>
+    <summary></summary>
+    <link href="https://localhost/youth-hockey-27/welcome"/>
+    
+    <content type="html">
+      <![CDATA[ <p>A 16-bit hockey game for the players and families of our association. Pick your team and your age level: the rink, the number of players, the rules and the parents in the stands all change with it.</p>
+<youth-hockey-27></youth-hockey-27>
+<p>New here? Read <a href="how-to-play">how to play</a>, then see <a href="age-levels">why the rink changes with age</a>.</p> ]]>
+    </content>
+  </entry>
+  <entry>
+    <title>How to play</title>
+    <id>item-538ae772-127b-4e63-bcaf-e41e92bd6dd3</id>
+    <updated>2026-11-11T21:06:54.000Z</updated>
+    <published>2026-11-11T21:06:54.000Z</published>
+    <summary></summary>
+    <link href="https://localhost/youth-hockey-27/how-to-play"/>
+    
+    <content type="html">
+      <![CDATA[ <h2>Controls</h2>
+<table>
+<thead><tr><th scope="col">Action</th><th scope="col">Keyboard</th><th scope="col">Gamepad</th><th scope="col">Touch</th></tr></thead>
+<tbody>
+<tr><td>Skate</td><td>Arrow keys</td><td>Left stick or d-pad</td><td>Joystick</td></tr>
+<tr><td>Pass, or switch player on defense</td><td>Z</td><td>A</td><td>PASS</td></tr>
+<tr><td>Shoot, or poke check on defense</td><td>X or Space</td><td>B</td><td>SHOOT</td></tr>
+<tr><td>Body check</td><td>C</td><td>X</td><td>CHECK</td></tr>
+<tr><td>Stick play: hook, lift or tie up</td><td>V</td><td>Y</td><td>STICK</td></tr>
+<tr><td>Pause</td><td>P or Esc</td><td>Start</td><td>Pause button</td></tr>
+<tr><td>Save the last 10 seconds as a clip</td><td>R</td><td>Select</td><td>Save clip button</td></tr>
+</tbody>
+</table>
+<p>One player can play on the keyboard. Up to four players can play with gamepads: on the setup screen, push left or right on a gamepad to move it to a team, and press A or Start to drop the puck. The CPU plays everyone else.</p>
+<h2>Setting up a game</h2>
+<ul>
+<li><strong>Teams</strong>: AAAA Sparkle Selects, B Squad, Saber Cats and the Icers.</li>
+<li><strong>Age level</strong>: 8U, 10U, 12U, 14U, 16U, 18U, or AAA &amp; Beer League. See <a href="age-levels">age levels</a> for what changes.</li>
+<li><strong>Ice or roller</strong>: roller is 4 on 4 on a full rink with no offsides, no icing and no body checking.</li>
+<li><strong>Exhibition or tournament</strong>: a tournament is a four-team bracket where the games you are not in are simulated. At 8U and 10U it is a jamboree instead: three games, no bracket, a medal for everyone.</li>
+<li><strong>Referee</strong>: the strictness slider sets how often the ref calls what they see. Jay mode calls nothing at all.</li>
+</ul>
+<h2>Stick play is a gamble</h2>
+<p>The stick button can slow down the puck carrier or knock the puck loose, and you might get a penalty for it. Using it on the player with the puck rarely gets called. Using it on someone without the puck usually does. Below 14U, a body check is always a penalty.</p>
+<h2>Between periods</h2>
+<p>Something happens at every intermission: a parent with an envelope, a hallway interview, a showcase brochure, a fight in the stands, or orange slices. What you choose changes the rest of the game.</p>
+<h2>Sharing a great play</h2>
+<p>Press R, or the Save clip button, and the game records the last 10 seconds as a video you can download and send to your fans.</p> ]]>
+    </content>
+  </entry>
+  <entry>
+    <title>Age levels and the ADM</title>
+    <id>item-3b732bd8-c132-40f3-8d6f-f202b6be0db7</id>
+    <updated>2026-11-11T21:06:56.000Z</updated>
+    <published>2026-11-11T21:06:56.000Z</published>
+    <summary></summary>
+    <link href="https://localhost/youth-hockey-27/age-levels"/>
+    
+    <content type="html">
+      <![CDATA[ <p>The game follows the idea behind USA Hockey's <a href="https://www.admkids.com/">American Development Model (ADM)</a>: kids play on a surface and with a team size that fits them. Smaller ice and fewer players mean more puck touches, more shots, more decisions and more fun.</p>
+<table>
+<thead><tr><th scope="col">Level</th><th scope="col">Surface</th><th scope="col">Players</th><th scope="col">Offsides and icing</th><th scope="col">Body checking</th><th scope="col">Score kept</th></tr></thead>
+<tbody>
+<tr><td>8U</td><td>⅓ ice, cross-ice, small nets</td><td>3 on 3</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>10U</td><td>½ ice, small nets</td><td>4 on 4</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>12U</td><td>½ ice</td><td>3 on 3</td><td>No</td><td>No</td><td>Yes</td></tr>
+<tr><td>14U</td><td>Full ice</td><td>5 on 5</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>16U and 18U</td><td>Full ice</td><td>5 on 5</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>AAA &amp; Beer League</td><td>Full ice</td><td>5 on 5</td><td>Yes</td><td>Yes, plus fights</td><td>Yes</td></tr>
+</tbody>
+</table>
+<p>Game length, skating speed and how good the CPU is all go up with age. At the small-ice levels a buzzer goes off every minute and a half or two, and everybody changes, so everybody plays.</p>
+<p>There's no scoreboard at 8U and 10U. When a kid scores, their parents wave dollar bills in the stands instead.</p>
+<h2>Watch the difference</h2>
+<p>Two CPU games, running on their own. Same teams, different age levels.</p>
+<h3>8U, cross-ice</h3>
+<youth-hockey-27 attract="" level="8U" home="sparkle-selects" away="icers"></youth-hockey-27>
+<h3>16U, full ice</h3>
+<youth-hockey-27 attract="" level="16U" home="sparkle-selects" away="icers"></youth-hockey-27>
+<h2>Learn more about the ADM</h2>
+<ul>
+<li><a href="https://www.admkids.com/">ADM Kids</a>, USA Hockey's site for families about the American Development Model.</li>
+<li><a href="https://portal.usahockey.com/cx/vice-president/hockey-development/8u_parent_guide.pdf">8U parent guide</a> (PDF).</li>
+<li><a href="https://portal.usahockey.com/cx/president/hockey-devlopment/recommended_youth_hockey_program_structure.pdf">Recommended youth hockey program structure</a> (PDF).</li>
+<li><a href="https://cdn1.sportngin.com/attachments/document/0129/4159/ADM_One-Sheet.pdf">The ADM on one page</a> (PDF).</li>
+</ul> ]]>
+    </content>
+  </entry>
+  <entry>
+    <title>Penalties</title>
+    <id>item-8b1a09b2-59b4-4b3a-8c1b-913d0120d4f2</id>
+    <updated>2026-11-11T21:06:57.000Z</updated>
+    <published>2026-11-11T21:06:57.000Z</published>
+    <summary></summary>
+    <link href="https://localhost/youth-hockey-27/penalties"/>
+    
+    <content type="html">
+      <![CDATA[ <p>Every penalty in the game comes from the USA Hockey rulebook. When the ref calls one, the game stops for a moment to show the ref's signal and explain the rule.</p>
+<table>
+<thead><tr><th scope="col">Penalty</th><th scope="col">The rule</th><th scope="col">How it happens in the game</th></tr></thead>
+<tbody>
+<tr><td>Tripping</td><td>Using your stick, knee or foot to make another player fall.</td><td>Stick play on the puck carrier.</td></tr>
+<tr><td>Hooking</td><td>Using the blade of your stick to pull or hold back another player.</td><td>Stick play on the puck carrier.</td></tr>
+<tr><td>Slashing</td><td>Swinging your stick at another player, even if you only hit their stick or gloves.</td><td>Stick play, and once in a while a poke check.</td></tr>
+<tr><td>Holding</td><td>Grabbing another player or their stick to slow them down.</td><td>Stick play, on or off the puck.</td></tr>
+<tr><td>Interference</td><td>Hitting, holding or blocking a player who does not have the puck.</td><td>A check or stick play on someone without the puck.</td></tr>
+<tr><td>High-sticking</td><td>Carrying your stick above your shoulders and making contact with another player.</td><td>Stick play.</td></tr>
+<tr><td>Cross-checking</td><td>Hitting another player with the shaft of your stick held in both hands.</td><td>A body check from behind.</td></tr>
+<tr><td>Roughing</td><td>Extra pushing, shoving or punching, usually after the whistle.</td><td>An occasional rough body check.</td></tr>
+<tr><td>Body checking</td><td>Body checking is not allowed until 14U. Younger players learn body contact and angling first, so they are ready for it.</td><td>Any body check below 14U.</td></tr>
+<tr><td>Fighting</td><td>Dropping the gloves earns a game misconduct.</td><td>AAA &amp; Beer League only. Both fighters are ejected, and when a team runs out of players the game is called.</td></tr>
+</tbody>
+</table>
+<h2>Calls, delays and power plays</h2>
+<ul>
+<li><strong>Delayed penalties</strong>: the ref raises an arm and waits until the team that committed the penalty touches the puck.</li>
+<li><strong>Power plays</strong>: a minor is two minutes in the box, and a power play goal ends it early.</li>
+<li><strong>Offsides and icing</strong> are called on full ice from 14U up, and never on roller.</li>
+<li><strong>Ref strictness</strong>: the slider on the setup screen scales every call. Jay mode turns penalties off entirely.</li>
+</ul>
+<h2>The rulebook</h2>
+<ul>
+<li><a href="https://usahockeyrulebook.com">USA Hockey rulebook</a>, with rules, interpretations, referee signals and rink diagrams.</li>
+<li><a href="https://cdn1.sportngin.com/attachments/document/787c-3383243/2025-29_USAH_Playing_Rules___Casebook.pdf">2025-29 playing rules and casebook</a> (PDF).</li>
+<li><a href="https://www.usahockeyrulebook.com/page/show/1084648-rule-604-body-checking">Rule 604, body checking</a>.</li>
+<li><a href="https://www.usahockey.com/rulesandresources">USA Hockey rules and resources</a>.</li>
+</ul> ]]>
+    </content>
+  </entry>
+  <entry>
+    <title>Behind the game</title>
+    <id>item-28b56b37-d7b1-4294-ae3d-b745dbbf98a4</id>
+    <updated>2026-11-11T21:06:58.000Z</updated>
+    <published>2026-11-11T21:06:58.000Z</published>
+    <summary></summary>
+    <link href="https://localhost/youth-hockey-27/behind-the-game"/>
+    
+    <content type="html">
+      <![CDATA[ <p>This is a game first. It's also a way to show why the ADM recommendations matter, and to poke at the darker side of youth sports: money, influence and exposure, as opposed to kids just having a great time.</p>
+<h2>The stands</h2>
+<p>Every kid on the ice has their own section of fans, from one to eight. When a kid does something good, their super fans go wild, jumping far higher than anyone around them. When a kid takes a penalty or a big hit, their parents might start a fight with the other kid's parents.</p>
+<h2>Exposure</h2>
+<p>Every player has a rating called exposure: money and pressure from the stands. It starts with how invested the parents are, and it goes up with showcase packages, hallway interviews and envelopes passed to the coach. In the game, the kids with the most exposure pass the least. Watch for the dollar bills: parents of high-exposure kids wave them when their kid has the puck, so the kid keeps it.</p>
+<p>The other rating is coachability: how well a player keeps their position, stays onside and moves the puck. Low coachability chases the puck, and takes more stick penalties.</p>
+<h2>Intermissions</h2>
+<ul>
+<li>A parent offers you money for more ice time. Take it, and their kid double-shifts, wears out and plays worse, and the crowd turns on you.</li>
+<li>A player wants to thank their grandparents for the new bike they got for a hat trick last game. Do they keep talking about the bike, or about their teammates?</li>
+<li>A man in a quarter-zip is selling a $4,800 showcase package.</li>
+<li>Two sets of parents are arguing about a missed offsides call while the kids watch from the bench.</li>
+<li>The grandparents brought orange slices for everyone.</li>
+</ul>
+<h2>The phone replay</h2>
+<p>After some goals, you'll see the replay the way a parent saw it: shaky, on their phone, while they call their kid's agent to argue for spending more money on exposure.</p>
+<h2>Look closely at the rosters</h2>
+<p>Every player keeps the same name and number at every age level. Play the same team at 8U and then at 18U, and see who the best players turn out to be.</p>
+<p>When you're ready to put the controller down, <a href="for-families">here's what helps kids most</a>.</p> ]]>
+    </content>
+  </entry>
+  <entry>
+    <title>For families</title>
+    <id>item-3e7f0dd5-641a-4c2b-b47c-09d76dea7025</id>
+    <updated>2026-11-11T21:06:59.000Z</updated>
+    <published>2026-11-11T21:06:59.000Z</published>
+    <summary></summary>
+    <link href="https://localhost/youth-hockey-27/for-families"/>
+    
+    <content type="html">
+      <![CDATA[ <p>The thing that helps your kid the most is also the easiest: relax, enjoy watching them, and support them. Cheer for effort, win or lose. Let the coaches coach and the refs ref. Let them have fun with their friends.</p>
+<h2>Resources</h2>
+<ul>
+<li><a href="https://www.admkids.com/page/show/1532458-y-yelling">Y yelling?</a>, from ADM Kids: the difference between cheering and yelling at kids, coaches and officials.</li>
+<li><a href="https://positivecoach.org/wp-content/uploads/Sideline-Self-Regulation-Tips-for-Parents-Caregivers.pdf">Sideline self-regulation tips for parents and caregivers</a> (PDF), from the Positive Coaching Alliance.</li>
+<li><a href="https://portal.usahockey.com/cx/vice-president/hockey-development/8u_parent_guide.pdf">USA Hockey's 8U parent guide</a> (PDF).</li>
+<li><a href="https://www.admkids.com/">ADM Kids</a>, USA Hockey's site for hockey families.</li>
+<li><a href="https://www.hockeycanada.ca/hockey-programs/parents">Hockey Canada's resources for parents</a>.</li>
+</ul> ]]>
+    </content>
+  </entry>
+  <entry>
+    <title>The teams</title>
+    <id>item-4e90cbd0-c226-46cd-b571-0563248ec1eb</id>
+    <updated>2026-11-11T21:07:00.000Z</updated>
+    <published>2026-11-11T21:07:00.000Z</published>
+    <summary></summary>
+    <link href="https://localhost/youth-hockey-27/teams"/>
+    
+    <content type="html">
+      <![CDATA[ <p>Four teams, each with home and away kits. All the rosters are made up: invented names and invented numbers.</p>
+<ul>
+<li><img src="files/crests/sparkle-selects.svg" alt="" width="64" height="64"> <strong>AAAA Sparkle Selects</strong>: neon pink, with yellow and blue.</li>
+<li><img src="files/crests/b-squad.svg" alt="" width="64" height="64"> <strong>B Squad</strong>: black and pink.</li>
+<li><img src="files/crests/saber-cats.svg" alt="" width="64" height="64"> <strong>Saber Cats</strong>: black and electric green.</li>
+<li><img src="files/crests/icers.svg" alt="" width="64" height="64"> <strong>Icers</strong>: navy and white.</li>
+</ul>
+<p>Every team carries 13 skaters and 2 goalies. Each player has ratings for skating, shooting, passing, stickhandling, checking and stamina, plus coachability and exposure. You can read how those last two work in <a href="behind-the-game">behind the game</a>.</p> ]]>
+    </content>
+  </entry>
+</feed>

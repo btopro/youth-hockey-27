@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item>
+<id>item-538ae772-127b-4e63-bcaf-e41e92bd6dd3</id>
+<indent>0</indent>
+<location>pages/item-538ae772-127b-4e63-bcaf-e41e92bd6dd3/index.xml</location>
+<slug>how-to-play</slug>
+<order>1</order>
+<parent></parent>
+<title>How to play</title>
+<description></description>
+<metadata>
+<created>1794431214</created>
+<updated>1794431214</updated>
+<images>
+</images>
+<videos>
+</videos>
+</metadata>
+<content><![CDATA[<h2>Controls</h2>
+<table>
+<thead><tr><th scope="col">Action</th><th scope="col">Keyboard</th><th scope="col">Gamepad</th><th scope="col">Touch</th></tr></thead>
+<tbody>
+<tr><td>Skate</td><td>Arrow keys</td><td>Left stick or d-pad</td><td>Joystick</td></tr>
+<tr><td>Pass, or switch player on defense</td><td>Z</td><td>A</td><td>PASS</td></tr>
+<tr><td>Shoot, or poke check on defense</td><td>X or Space</td><td>B</td><td>SHOOT</td></tr>
+<tr><td>Body check</td><td>C</td><td>X</td><td>CHECK</td></tr>
+<tr><td>Stick play: hook, lift or tie up</td><td>V</td><td>Y</td><td>STICK</td></tr>
+<tr><td>Pause</td><td>P or Esc</td><td>Start</td><td>Pause button</td></tr>
+<tr><td>Save the last 10 seconds as a clip</td><td>R</td><td>Select</td><td>Save clip button</td></tr>
+</tbody>
+</table>
+<p>One player can play on the keyboard. Up to four players can play with gamepads: on the setup screen, push left or right on a gamepad to move it to a team, and press A or Start to drop the puck. The CPU plays everyone else.</p>
+<h2>Setting up a game</h2>
+<ul>
+<li><strong>Teams</strong>: AAAA Sparkle Selects, B Squad, Saber Cats and the Icers.</li>
+<li><strong>Age level</strong>: 8U, 10U, 12U, 14U, 16U, 18U, or AAA &amp; Beer League. See <a href="age-levels">age levels</a> for what changes.</li>
+<li><strong>Ice or roller</strong>: roller is 4 on 4 on a full rink with no offsides, no icing and no body checking.</li>
+<li><strong>Exhibition or tournament</strong>: a tournament is a four-team bracket where the games you are not in are simulated. At 8U and 10U it is a jamboree instead: three games, no bracket, a medal for everyone.</li>
+<li><strong>Referee</strong>: the strictness slider sets how often the ref calls what they see. Jay mode calls nothing at all.</li>
+</ul>
+<h2>Stick play is a gamble</h2>
+<p>The stick button can slow down the puck carrier or knock the puck loose, and you might get a penalty for it. Using it on the player with the puck rarely gets called. Using it on someone without the puck usually does. Below 14U, a body check is always a penalty.</p>
+<h2>Between periods</h2>
+<p>Something happens at every intermission: a parent with an envelope, a hallway interview, a showcase brochure, a fight in the stands, or orange slices. What you choose changes the rest of the game.</p>
+<h2>Sharing a great play</h2>
+<p>Press R, or the Save clip button, and the game records the last 10 seconds as a video you can download and send to your fans.</p>]]></content>
+</item>

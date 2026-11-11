@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item>
+<id>item-4e90cbd0-c226-46cd-b571-0563248ec1eb</id>
+<indent>0</indent>
+<location>pages/item-4e90cbd0-c226-46cd-b571-0563248ec1eb/index.xml</location>
+<slug>teams</slug>
+<order>6</order>
+<parent></parent>
+<title>The teams</title>
+<description></description>
+<metadata>
+<created>1794431220</created>
+<updated>1794431220</updated>
+<images>
+</images>
+<videos>
+</videos>
+</metadata>
+<content><![CDATA[<p>Four teams, each with home and away kits. All the rosters are made up: invented names and invented numbers.</p>
+<ul>
+<li><img src="files/crests/sparkle-selects.svg" alt="" width="64" height="64"> <strong>AAAA Sparkle Selects</strong>: neon pink, with yellow and blue.</li>
+<li><img src="files/crests/b-squad.svg" alt="" width="64" height="64"> <strong>B Squad</strong>: black and pink.</li>
+<li><img src="files/crests/saber-cats.svg" alt="" width="64" height="64"> <strong>Saber Cats</strong>: black and electric green.</li>
+<li><img src="files/crests/icers.svg" alt="" width="64" height="64"> <strong>Icers</strong>: navy and white.</li>
+</ul>
+<p>Every team carries 13 skaters and 2 goalies. Each player has ratings for skating, shooting, passing, stickhandling, checking and stamina, plus coachability and exposure. You can read how those last two work in <a href="behind-the-game">behind the game</a>.</p>]]></content>
+</item>
