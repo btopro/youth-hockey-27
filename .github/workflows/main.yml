@@ -1,0 +1,47 @@
+name: Build and Deploy
+# Every push to main runs the engine tests, rebuilds the game from source and
+# publishes the site to the gh-pages branch, which GitHub Pages serves.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: custom/package-lock.json
+
+      - name: Test the game engine
+        run: npm test
+
+      - name: Build the game
+        working-directory: custom
+        run: |
+          npm ci
+          npm run build
+
+      - name: Prepare the site for GitHub Pages
+        run: |
+          rm -rf custom/node_modules
+          npm run ghpages:build
+
+      - name: Deploy to the gh-pages branch
+        uses: JamesIves/github-pages-deploy-action@v4.6.3
+        with:
+          branch: gh-pages
+          folder: .
