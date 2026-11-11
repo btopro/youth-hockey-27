@@ -1263,8 +1263,9 @@ export class Game {
         return
       }
       if (p.shot && p.shot.beat) continue
-      // loose puck in the crease: the goalie covers it or plays it
-      if (!fast && d < reach) {
+      // loose puck in the crease: the goalie covers it or plays it, but not
+      // the pass it just made
+      if (!fast && d < reach && g.cooldown.pickup <= 0) {
         this.goalieTakes(g)
         return
       }
@@ -1316,6 +1317,7 @@ export class Game {
     p.vx = (dx / len) * sp
     p.vy = (dy / len) * sp
     p.pass = { from: g.uid, to: to.uid, side: g.side }
+    g.cooldown.pickup = 1.2
     this.emit('goalie-pass', { side: g.side })
   }
 
