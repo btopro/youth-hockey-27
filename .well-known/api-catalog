@@ -1,0 +1,27 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://localhost/_sites/youth-hockey-27/",
+      "item": [
+        {
+          "href": "https://localhost/_sites/youth-hockey-27/x/api",
+          "rel": "service"
+        }
+      ],
+      "service-desc": [
+        {
+          "href": "https://localhost/_sites/youth-hockey-27/x/api/openapi",
+          "type": "application/json"
+        },
+        {
+          "href": "https://localhost/_sites/youth-hockey-27/x/api/openapi.json",
+          "type": "application/json"
+        },
+        {
+          "href": "https://localhost/_sites/youth-hockey-27/x/api/openapi.yaml",
+          "type": "application/yaml"
+        }
+      ]
+    }
+  ]
+}
