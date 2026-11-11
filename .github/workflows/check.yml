@@ -1,0 +1,31 @@
+name: Check
+# Pull requests: run the engine tests and make sure the game still builds.
+# Nothing is published from here.
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: custom/package-lock.json
+
+      - name: Test the game engine
+        run: npm test
+
+      - name: Build the game
+        working-directory: custom
+        run: |
+          npm ci
+          npm run build
