@@ -107,7 +107,7 @@ const carrierAI = (game, e, team, decide) => {
     const range = (10 + 20 * game.rules.speed) * (0.8 + e.rating.shot / 260)
     const held = game.time - (e.heldSince || 0)
     if (angleOk && toNet < range && held > 0.45) {
-      let pShoot = 0.1 + e.rating.shot / 450 + (toNet < range * 0.5 ? 0.22 : 0) + (pressure < 4 ? 0.1 : 0)
+      let pShoot = 0.06 + e.rating.shot / 700 + (toNet < range * 0.5 ? 0.16 : 0) + (pressure < 4 ? 0.06 : 0)
       // a defender in the shooting lane: look for something better
       const netPt = { x: net.cx, y: net.lineY }
       if (opps.some((o) => segDist(o, e, netPt) < 1.8 && dist(o, e) < toNet)) pShoot *= 0.3
@@ -150,32 +150,119 @@ const carrierAI = (game, e, team, decide) => {
   return toward(e, t.x, t.y, 4)
 }
 
-const supportAI = (game, e, team, carrierPos) => {
+// ---------- positions ----------
+
+// the rink from one team's point of view: u is distance up the ice from its
+// own goal line toward the net it attacks, x is across
+const frame = (game, team) => {
   const s = game.rules.surface
-  const d = team.attackDir()
-  const net = game.netFor(e.side)
-  const mates = team
-    .onIceSkaters()
-    .filter((m) => game.puck.carrier !== m)
-    .sort((a, b) => a.uid - b.uid)
-  const idx = mates.indexOf(e)
-  const leftSide = carrierPos.x < s.width / 2
-  const slots = [
-    { x: leftSide ? s.width * 0.72 : s.width * 0.28, y: carrierPos.y + d * 12 },
-    { x: s.width / 2 + (leftSide ? 4 : -4), y: net.lineY + net.mouth * 13 },
-    { x: leftSide ? s.width * 0.3 : s.width * 0.7, y: carrierPos.y - d * 16 },
-    { x: leftSide ? s.width * 0.68 : s.width * 0.32, y: carrierPos.y - d * 24 },
-  ]
-  let tgt = Object.assign({}, slots[Math.max(0, idx) % slots.length])
+  const own = team.ownNetY()
+  const dirn = team.attackDir()
+  const length = Math.abs(team.targetNetY() - own)
+  // where the offensive zone starts: the blue line on full ice, halfway on small ice
+  const oz = s.blueLines ? length - (s.blueLines - s.goalLine) : length * 0.5
+  return {
+    W: s.width,
+    length,
+    oz,
+    dz: length - oz,
+    u: (y) => (y - own) * dirn,
+    y: (u) => own + dirn * u,
+  }
+}
+
+const isD = (e) => e.role === 'LD' || e.role === 'RD' || e.role === 'D'
+
+// where a role wants to be. mode: 'attack' (we have it), 'defend' (they do)
+const roleSpot = (game, team, e, mode, anchor) => {
+  const f = frame(game, team)
+  const W = f.W
+  const au = f.u(anchor.y)
+  const leftSide = anchor.x < W / 2
+  const role = e.role || 'C'
+  let x = W / 2
+  let u = au
+  if (mode === 'attack') {
+    if (au > f.oz - 4) {
+      // set up in the zone: points, high slot, half wall, net front
+      if (role === 'LD') [x, u] = [W * 0.25, f.oz + 4]
+      else if (role === 'RD') [x, u] = [W * 0.75, f.oz + 4]
+      else if (role === 'D') [x, u] = [W * 0.5, f.oz + 4]
+      else if (role === 'C') [x, u] = [W * 0.5, f.length - 20]
+      else {
+        // wingers split: one on the puck-side wall, one at the net
+        const wallSide = (role === 'LW') === leftSide || (role === 'W' && e.uid % 2 === 0)
+        if (wallSide) [x, u] = [leftSide ? W * 0.16 : W * 0.84, f.length - 24]
+        else [x, u] = [W / 2 + (leftSide ? 4 : -4), f.length - 7]
+      }
+    } else {
+      // breakout: wingers wide and ahead, center underneath, D trail
+      if (role === 'LW') [x, u] = [W * 0.12, au + 22]
+      else if (role === 'RW') [x, u] = [W * 0.88, au + 22]
+      else if (role === 'W') [x, u] = [leftSide ? W * 0.85 : W * 0.15, au + 22]
+      else if (role === 'C') [x, u] = [W * 0.5, au + 12]
+      else if (role === 'LD') [x, u] = [W * 0.3, au - 16]
+      else if (role === 'RD') [x, u] = [W * 0.7, au - 16]
+      else [x, u] = [W * 0.5, au - 16]
+      u = Math.max(6, u)
+    }
+  } else {
+    if (au < f.dz + 6) {
+      // in our zone: D box the slot, forwards take the points, C low support
+      // no goalie (the pond): the D on the puck side parks in front of the net
+      const noGoalie = !game.rules.goalies
+      const keeper = noGoalie && (role === 'D' || (role === 'LD') === leftSide)
+      if (keeper) [x, u] = [W * 0.5, 3]
+      else if (role === 'LD') [x, u] = [W * 0.38, 9]
+      else if (role === 'RD') [x, u] = [W * 0.62, 9]
+      else if (role === 'D') [x, u] = [W * 0.5, 8]
+      else if (role === 'C') [x, u] = [W * 0.5, 18]
+      else if (role === 'LW') [x, u] = [W * 0.25, f.dz - 4]
+      else if (role === 'RW') [x, u] = [W * 0.75, f.dz - 4]
+      else [x, u] = [leftSide ? W * 0.75 : W * 0.25, f.dz - 4]
+    } else {
+      // keep a gap: stay between the puck and the net
+      if (isD(e)) {
+        x = role === 'LD' ? W * 0.32 : role === 'RD' ? W * 0.68 : W * 0.5
+        u = Math.max(8, au - 18)
+      } else {
+        x = role === 'LW' ? W * 0.28 : role === 'RW' ? W * 0.72 : W * 0.5
+        u = Math.max(12, au - 8)
+      }
+    }
+  }
+  return { x, y: f.y(u) }
+}
+
+// nudge a target away from the nearest teammate so nobody stacks up
+const spread = (game, team, e, t) => {
+  let nx = 0
+  let ny = 0
+  for (const m of team.onIceSkaters()) {
+    if (m === e) continue
+    const dx = t.x - m.x
+    const dy = t.y - m.y
+    const d = Math.hypot(dx, dy)
+    if (d > 0 && d < 9) {
+      nx += (dx / d) * (9 - d)
+      ny += (dy / d) * (9 - d)
+    }
+  }
+  return { x: t.x + nx * 0.6, y: t.y + ny * 0.6 }
+}
+
+const supportAI = (game, e, team, carrierPos) => {
+  let tgt = roleSpot(game, team, e, 'attack', carrierPos)
   // puck watchers drift toward the puck
   if (!e.discipline && e.rating.coachability < 45) {
     tgt = { x: (tgt.x + carrierPos.x) / 2, y: (tgt.y + carrierPos.y) / 2 }
   }
   // small wobble so nobody stands still
-  tgt.x += Math.sin(game.time * 1.3 + e.uid) * 2.5
+  tgt.x += Math.sin(game.time * 1.3 + e.uid) * 2
+  tgt = spread(game, team, e, tgt)
   tgt = holdOnside(game, team, e, tgt)
   const t = clampTarget(game, tgt)
-  return toward(e, t.x, t.y, 2)
+  return toward(e, t.x, t.y, 2.2)
 }
 
 const defendAI = (game, e, team, decide) => {
@@ -220,29 +307,24 @@ const defendAI = (game, e, team, decide) => {
     }
     return toward(e, c.x + (dx / l) * 2, c.y + (dy / l) * 2, 4)
   }
-  // man to man on the other attackers
-  const defenders = mates.filter((m) => m !== byDist[0]).sort((a, b) => a.uid - b.uid)
-  const attackers = opp
-    .onIceSkaters()
-    .filter((o) => o !== c)
-    .sort((a, b) => a.uid - b.uid)
-  const idx = defenders.indexOf(e)
-  if (attackers.length === 0) {
-    const t = clampTarget(game, { x: own.cx + (idx % 2 ? 8 : -8), y: own.lineY + own.mouth * 10 })
-    return toward(e, t.x, t.y, 2)
-  }
-  const mark = attackers[Math.max(0, idx) % attackers.length]
-  if (decide && dist(e, mark) < 3) {
-    if (game.time >= (e.nextStickAt || 0) && rng.chance((100 - coach) / 400000)) {
-      game.stickPlay(e, mark)
-      e.nextStickAt = game.time + 18 + coach / 3
+  // positional defense: each role takes its spot, shading toward the attacker
+  // nearest that spot
+  let spot = roleSpot(game, team, e, 'defend', c)
+  const attackers = opp.onIceSkaters().filter((o) => o !== c)
+  const mark = attackers.slice().sort((a, b) => dist(a, spot) - dist(b, spot))[0]
+  if (mark && dist(mark, spot) < 22) {
+    spot = {
+      x: spot.x + (mark.x + (ownFront.x - mark.x) * 0.35 - spot.x) * 0.55,
+      y: spot.y + (mark.y + (ownFront.y - mark.y) * 0.35 - spot.y) * 0.55,
     }
-    else if (game.rules.checking && rng.chance((100 - coach) / 12000)) game.bodyCheck(e, mark)
+    if (decide && dist(e, mark) < 3 && game.time >= (e.nextStickAt || 0) && rng.chance((100 - coach) / 400000)) {
+      game.stickPlay(e, mark)
+      e.nextStickAt = game.time + 10 + coach / 6
+    } else if (decide && dist(e, mark) < 3 && game.rules.checking && rng.chance((100 - coach) / 12000)) {
+      game.bodyCheck(e, mark)
+    }
   }
-  const t = clampTarget(game, {
-    x: mark.x + (ownFront.x - mark.x) * 0.35,
-    y: mark.y + (ownFront.y - mark.y) * 0.35,
-  })
+  const t = clampTarget(game, spread(game, team, e, spot))
   return toward(e, t.x, t.y, 2.4)
 }
 
@@ -251,18 +333,22 @@ const loosePuckAI = (game, e, team) => {
   const mates = team.onIceSkaters().slice().sort((a, b) => dist(a, p) - dist(b, p))
   const rank = mates.indexOf(e)
   const swarm = !e.discipline && e.rating.coachability < 50
-  if (rank === 0 || (rank === 1 && swarm) || (game.rules.ageIndex === 0 && swarm)) {
+  const f = frame(game, team)
+  const pu = f.u(p.y)
+  // hold the zone: a loose puck at our offensive blue line, sliding out, is the
+  // D's to keep in
+  const atLine = pu > f.oz - 10 && pu < f.oz + 8
+  const sliding = (p.vy * team.attackDir()) < 0
+  const pinch = isD(e) && atLine && sliding && rank <= 1 && ((e.role === 'LD') === (p.x < f.W / 2) || e.role === 'D')
+  if (rank === 0 || pinch || (rank === 1 && swarm) || (game.rules.ageIndex === 0 && swarm)) {
     const t = clampTarget(game, { x: p.x + p.vx * 0.3, y: p.y + p.vy * 0.3 })
     return toward(e, t.x, t.y, 5)
   }
   const ours = p.lastTouch && p.lastTouch.side === e.side
-  if (ours) return supportAI(game, e, team, p)
-  const own = game.ownNetFor(e.side)
-  const ownFront = front(own, 4)
-  const t = clampTarget(game, {
-    x: p.x + (ownFront.x - p.x) * 0.45 + (rank % 2 ? 6 : -6),
-    y: p.y + (ownFront.y - p.y) * 0.45,
-  })
+  let spot = roleSpot(game, team, e, ours ? 'attack' : 'defend', p)
+  spot = spread(game, team, e, spot)
+  if (ours) spot = holdOnside(game, team, e, spot)
+  const t = clampTarget(game, spot)
   return toward(e, t.x, t.y, 2.4)
 }
 
@@ -278,6 +364,17 @@ export const aiSkater = (game, e, dt) => {
   }
   const c = p.carrier
   if (c === e) return carrierAI(game, e, team, decide)
+  // no goalies (the pond): one D stays home in the net mouth whenever the
+  // puck is in our half and not ours, unless it comes right to them
+  if (!game.rules.goalies && (e.role === 'LD' || e.role === 'D')) {
+    const f = frame(game, team)
+    const ours = (c && c.side === e.side) || (!c && p.lastTouch && p.lastTouch.side === e.side)
+    if (!ours && f.u(p.y) < f.length * 0.55 && dist(e, p) > 6) {
+      const own = game.ownNetFor(e.side)
+      const t = { x: own.cx + (p.x - own.cx) * 0.1, y: own.lineY + own.mouth * 2 }
+      return toward(e, t.x, t.y, 4)
+    }
+  }
   if (c && c.side === e.side) return supportAI(game, e, team, c)
   if (c) return defendAI(game, e, team, decide)
   return loosePuckAI(game, e, team)
