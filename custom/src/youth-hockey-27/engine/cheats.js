@@ -97,9 +97,10 @@ export const CODES = {
   TINYGOALIE: { type: 'modifier', id: 'tiny-goalies' },
 }
 
-// the button combo for gamepads and the keyboard: unlocks everything
-// up up down down, shoot pass shoot pass
-export const COMBO = ['up', 'up', 'down', 'down', 'shoot', 'pass', 'shoot', 'pass']
+// the button combo for gamepads and the keyboard: unlocks everything.
+// up up down down left right left right, check stick
+// (C V on the keyboard, X Y on a gamepad: not the menu's confirm and back)
+export const COMBO = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right', 'check', 'stick']
 
 export const normalizeCode = (text) => String(text || '').toUpperCase().replace(/[^A-Z0-9]/g, '')
 

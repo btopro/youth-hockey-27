@@ -262,7 +262,7 @@ export class Game {
     let awayKit = opts.awayKit || 'away'
     this.teams = {
       home: new Team(this, 'home', opts.home || 'sparkle-selects', homeKit),
-      away: new Team(this, 'away', opts.away || 'icers', awayKit),
+      away: new Team(this, 'away', opts.away || 'jesus-selects', awayKit),
     }
     this.puck = {
       x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0,
@@ -1629,6 +1629,20 @@ export class Game {
     this.phase = 'intermission'
     const side = this.opts.focusSide || 'home'
     const team = this.teams[side]
+    if (!this.rules.crowd) {
+      // nobody came to the pond or the street, so nobody makes it weird
+      this.intermission = {
+        id: 'quiet',
+        side,
+        subject: null,
+        title: 'Hot chocolate break',
+        body: 'Nobody came to watch. No refs, no scoreboard operator, no parents. Everyone is having a great time.',
+        choices: ['Back out there'],
+      }
+      this.emit('intermission', Object.assign({}, this.intermission))
+      if (this.opts.autoIntermission) this.chooseIntermission(0)
+      return
+    }
     const ev = this.rng.weighted(INTERMISSION_EVENTS)
     const subject = ev.subject(team) || null
     this.intermission = {
@@ -1646,14 +1660,17 @@ export class Game {
   chooseIntermission(index) {
     if (!this.intermission) return null
     const ev = INTERMISSION_EVENTS.find((x) => x.id === this.intermission.id)
-    const choice = ev.choices[clamp(index, 0, ev.choices.length - 1)]
     const team = this.teams[this.intermission.side]
     const subject = this.intermission.subject ? this.findEntity(this.intermission.subject) : null
+    // the quiet break has nothing to choose
+    const choice = ev
+      ? ev.choices[clamp(index, 0, ev.choices.length - 1)]
+      : { label: 'Back out there', result: () => 'Back out there.', apply: () => {} }
     choice.apply(this, team, subject)
     this.crowd.mood = clamp(this.crowd.mood, 0, 1)
     team.chemistry = clamp(team.chemistry, -0.3, 0.5)
     const result = choice.result(subject)
-    this.emit('intermission-choice', { id: ev.id, choice: choice.label, result })
+    this.emit('intermission-choice', { id: this.intermission.id, choice: choice.label, result })
     this.intermission = null
     this.period++
     this.clock = this.rules.periodSeconds

@@ -13,7 +13,7 @@ import { createRng } from '../engine/rng.js'
 
 export class Tournament {
   /**
-   * @param {object} opts { level, roller, ruleset, strictness, team, seed }
+   * @param {object} opts { level, venue, ruleset, strictness, team, seed }
    */
   constructor(opts) {
     this.opts = opts
@@ -50,6 +50,7 @@ export class Tournament {
     return {
       level: this.opts.level,
       roller: this.opts.roller,
+      venue: this.opts.venue,
       ruleset: this.opts.ruleset,
       strictness: this.opts.strictness,
       needWinner: !this.jamboree,

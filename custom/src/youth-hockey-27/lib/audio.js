@@ -206,8 +206,97 @@ export class ChipAudio {
         this.crowdSurge(1)
         this.playSting('rally')
         break
+      case 'menu':
+        this.tone('square', 660, t, 0.05, 0.05, { filter: 3000 })
+        break
+      case 'select':
+        this.tone('square', 880, t, 0.06, 0.06, { filter: 3000 })
+        this.tone('square', 1320, t + 0.06, 0.08, 0.06, { filter: 3000 })
+        break
+      case 'back':
+        this.tone('square', 520, t, 0.06, 0.05, { filter: 2400 })
+        this.tone('square', 330, t + 0.06, 0.08, 0.05, { filter: 2400 })
+        break
+      case 'tv-on':
+        // the tube whine and a burst of static
+        this.tone('sine', 15600, t, 0.5, 0.02, { hold: 0.9 })
+        this.burst(t + 0.25, 1.1, 0.35, 3000, 'bandpass')
+        break
+      case 'slam':
+        this.tone('sine', 110, t, 0.45, 0.4, { slideTo: 40 })
+        this.burst(t, 0.3, 0.5, 400, 'lowpass')
+        break
+      case 'roar':
+        this.roar()
+        break
+      case 'punch':
+        this.burst(t, 0.12, 0.6, 600, 'lowpass')
+        this.tone('square', 90, t, 0.1, 0.12, { slideTo: 50, filter: 800 })
+        break
+      case 'whoosh':
+        this.burst(t, 0.18, 0.25, 2200, 'bandpass')
+        break
+      case 'bell':
+        for (const k of [0, 0.35, 0.7]) {
+          this.tone('triangle', 1318, t + k, 0.6, 0.12, { hold: 0.05 })
+          this.tone('sine', 2637, t + k, 0.4, 0.05, { hold: 0.05 })
+        }
+        break
+      case 'snap':
+        // composite stick cracks, then the cash register
+        this.burst(t, 0.06, 0.9, 3500, 'highpass')
+        this.burst(t + 0.03, 0.2, 0.5, 900, 'bandpass')
+        this.playSting('money')
+        break
+      case 'posted':
+        this.tone('sine', 988, t, 0.12, 0.08, { hold: 0.3 })
+        this.tone('sine', 1319, t + 0.1, 0.2, 0.08, { hold: 0.3 })
+        break
+      case 'cheat':
+        ;['C5', 'E5', 'G5', 'C6', 'E6', 'G6', 'C7'].forEach((n, i) => this.tone('square', NOTE(n), t + i * 0.06, 0.08, 0.05, { filter: 4000 }))
+        break
       default:
         if (STINGS[name]) this.playSting(name)
+    }
+  }
+
+  // the big intro roar: the crowd swells, then the organ hits
+  roar() {
+    if (!this.ctx || this.muted) return
+    const t = this.ctx.currentTime
+    const src = this.ctx.createBufferSource()
+    src.buffer = this.noiseBuffer()
+    src.loop = true
+    const f = this.ctx.createBiquadFilter()
+    f.type = 'bandpass'
+    f.Q.value = 0.5
+    f.frequency.setValueAtTime(400, t)
+    f.frequency.linearRampToValueAtTime(1400, t + 1.6)
+    const g = this.ctx.createGain()
+    g.gain.setValueAtTime(0.0001, t)
+    g.gain.exponentialRampToValueAtTime(0.5, t + 1.4)
+    g.gain.setTargetAtTime(0.0001, t + 2.4, 0.6)
+    src.connect(f)
+    f.connect(g)
+    g.connect(this.master)
+    src.start(t)
+    src.stop(t + 5)
+  }
+
+  // a synthesized announcer, when the browser has a voice to lend
+  announce(text) {
+    if (this.muted) return
+    try {
+      const synth = globalThis.speechSynthesis
+      if (!synth) return
+      const u = new globalThis.SpeechSynthesisUtterance(text)
+      u.pitch = 0.4
+      u.rate = 0.85
+      u.volume = 0.9
+      synth.cancel()
+      synth.speak(u)
+    } catch (e) {
+      // no speech here; the logo carries it
     }
   }
 
