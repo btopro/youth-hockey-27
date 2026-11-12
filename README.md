@@ -1,4 +1,4 @@
-# Youth Hockey '27
+# Youth Sports 27
 
 A 16-bit, NHL 93-style hockey game about youth hockey: age levels follow the USA Hockey American Development Model, the rulebook's penalties are in the game, and the stands hold up a mirror to what money and pressure do to kids' sports.
 
@@ -22,8 +22,10 @@ npm run build    # or npm start to rebuild on change
 ```
 
 - `engine/`: the headless engine (rules, physics, AI, rosters, penalties, intermission events). No DOM, so it runs in Node too.
-- `lib/`: renderer, sprites, bitmap font, chiptune audio, input (keyboard, 4 gamepads, touch), replays and clips, tournament.
-- `youth-hockey-27.js`: the element: setup screen, the game, the stands, overlays.
+- `lib/`: renderer, sprites, bitmap font, chiptune audio, input (keyboard, 4 gamepads, touch), replays and clips, tournament, the TV intro, the arcade menu backdrop and icons, the parent brawl, BookFace, saved unlocks and the styles.
+- `youth-hockey-27.js`: the element: intro, menus, the game, the stands, overlays.
+
+Lit comes from the site, not the bundle: the element imports `html` from `@haxtheweb/haxcms-elements/lib/core/HAXCMSLitElementTheme.js` and extends `DDD` from `@haxtheweb/d-d-d/d-d-d.js`, both served by the site's import map.
 
 ## Simulate and test
 
@@ -37,8 +39,15 @@ npm test                        # engine invariants
 
 ## Embed a demo
 
-Any HAX page can show a CPU vs CPU demo of a level:
+Any HAX page can show a CPU vs CPU demo of a level and venue (`venue` is `rink`, `roller`, `pond` or `street`):
 
 ```html
-<youth-hockey-27 attract level="8U" home="sparkle-selects" away="icers"></youth-hockey-27>
+<youth-hockey-27 attract level="8U" home="sparkle-selects" away="jesus-selects"></youth-hockey-27>
+<youth-hockey-27 attract level="12U" venue="pond" home="d1-or-bust" away="elite-prospects"></youth-hockey-27>
+```
+
+Add `skip-intro` to a playable game to go straight to the menu:
+
+```html
+<youth-hockey-27 skip-intro></youth-hockey-27>
 ```

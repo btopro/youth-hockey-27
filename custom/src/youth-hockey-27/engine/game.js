@@ -7,7 +7,7 @@
 // the rink, y along it, with the top goal line at y = surface.goalLine.
 //
 // Usage:
-//   const game = new Game({ level: '10U', home: 'icers', away: 'saber-cats' })
+//   const game = new Game({ level: '10U', venue: 'rink', home: 'jesus-selects', away: 'd1-or-bust' })
 //   game.step(1 / 60, inputs)   // inputs: { [controllerId]: { x, y, pass, shoot, check, stick } }
 //   game.drainEvents()          // [{ type: 'goal', ... }, ...]
 //   game.snapshot()             // plain object for the renderer and replays
