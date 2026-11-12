@@ -1,5 +1,7 @@
 # AGENTS.md - HAXcms Site Interface
 
+> **Youth Sports 27:** before changing the game's gameplay, AI, ratings, rosters, satire or site copy, read [HOCKEY.md](HOCKEY.md) (the coach's worldview, the lessons it turns into rules for the game, and build lessons learned in this repo) and [DESIGN.md](DESIGN.md) (every design decision).
+
 This file provides comprehensive instructions for AI coding agents working within this specific HAXcms site. HAXcms sites are built on the HAX (Headless Authoring eXperience) ecosystem and follow specific patterns for content management, theming, and deployment.
 
 ## Site Structure Overview
