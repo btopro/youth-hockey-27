@@ -2,7 +2,7 @@
 
 A 16-bit, NHL 93-style hockey game about youth hockey: age levels follow the USA Hockey American Development Model, the rulebook's penalties are in the game, and the stands hold up a mirror to what money and pressure do to kids' sports.
 
-The repo is a HAXsite. The pages document the rules, the age levels and resources for families; the game is the `<youth-hockey-27>` web component on the Play page. See [DESIGN.md](DESIGN.md) for every design decision.
+The repo is a HAXsite. The pages document the rules, the age levels and resources for families; the game is the `<youth-hockey-27>` web component on the Play page. See [DESIGN.md](DESIGN.md) for every design decision and [HOCKEY.md](HOCKEY.md) for the coaching worldview behind it.
 
 ## Run the site
 
