@@ -29,11 +29,6 @@ export default {
     if (asset.endsWith(inputFile) || asset.startsWith('./') || asset.startsWith('../') || asset.startsWith(srcDir)) {
       return false;
     }
-    // the site's import map only maps @haxtheweb/ for custom code, so lit is
-    // bundled in rather than left as a bare import that would not resolve
-    if (/^(lit|lit-html|lit-element|@lit\/)/.test(asset) || /node_modules[\\/](lit|lit-html|lit-element|@lit)[\\/]/.test(asset)) {
-      return false;
-    }
     return true;
   },
   preserveEntrySignatures: false,

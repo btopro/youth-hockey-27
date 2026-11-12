@@ -12,22 +12,27 @@ metadata:
   images: []
   videos: []
 content: >-
-  <p>Four teams, each with home and away kits. All the rosters are made up:
+  <p>Five teams, each with home and away kits. All the rosters are made up:
   invented names and invented numbers.</p>
 
   <ul>
 
-  <li><img src="files/crests/sparkle-selects.svg" alt="" width="64" height="64">
+  <li><img src="files/crests/sparkle-selects.svg" alt="" height="64">
   <strong>AAAA Sparkle Selects</strong>: neon pink, with yellow and blue.</li>
 
-  <li><img src="files/crests/b-squad.svg" alt="" width="64" height="64">
-  <strong>B Squad</strong>: black and pink.</li>
+  <li><img src="files/crests/b-squad.svg" alt="" height="64"> <strong>B
+  Squad</strong>: black and pink.</li>
 
-  <li><img src="files/crests/saber-cats.svg" alt="" width="64" height="64">
-  <strong>Saber Cats</strong>: black and electric green.</li>
+  <li><img src="files/crests/jesus-selects.svg" alt="" height="64">
+  <strong>Jesus Selects</strong>: white and royal blue with gold trim, a halo
+  over the puck.</li>
 
-  <li><img src="files/crests/icers.svg" alt="" width="64" height="64">
-  <strong>Icers</strong>: navy and white.</li>
+  <li><img src="files/crests/elite-prospects.svg" alt="" height="64">
+  <strong>Elite Prospects</strong>: black, gold and silver. The crown came with
+  the registration fee.</li>
+
+  <li><img src="files/crests/d1-or-bust.svg" alt="" height="64"> <strong>D1 or
+  Bust</strong>: blaze orange and navy. The plan is already on the jersey.</li>
 
   </ul>
 
@@ -35,3 +40,9 @@ content: >-
   skating, shooting, passing, stickhandling, checking and stamina, plus
   coachability and exposure. You can read how those last two work in <a
   href="behind-the-game">behind the game</a>.</p>
+
+  <h2>Guest stars</h2>
+
+  <p>A few cheat codes put a guest star on your team: someone who drives the ice
+  machine, someone who brought the orange slices, a tall hairy legend and the
+  team mascot. The codes are hinted on the game's HOW TO PLAY screen.</p>

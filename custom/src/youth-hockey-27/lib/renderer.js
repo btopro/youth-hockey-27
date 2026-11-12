@@ -88,8 +88,8 @@ export class Renderer {
 
   // ---------- the static rink layer ----------
 
-  rinkLayer(surfaceId, scale, homeCrest) {
-    const key = `${surfaceId}|${scale}|${homeCrest}|${this.rules ? this.rules.net.width : 6}`
+  rinkLayer(surfaceId, scale, homeCrest, pink) {
+    const key = `${surfaceId}|${scale}|${homeCrest}|${this.rules ? this.rules.net.width : 6}|${pink ? 1 : 0}`
     if (this.rinkCache.has(key)) return this.rinkCache.get(key)
     const s = SURFACES[surfaceId]
     const pad = 6
@@ -110,23 +110,26 @@ export class Renderer {
       g.arcTo(x, y, x + rw, y, rr)
       g.closePath()
     }
-    // boards
+    const pond = surfaceId === 'pond'
+    const street = surfaceId === 'street'
+    // boards: snowbanks at the pond, curbs in the street
     roundRect(pad - 4, pad - 4, s.width * scale + 8, s.length * scale + 8, r + 4)
-    g.fillStyle = '#2b3a55'
+    g.fillStyle = pond ? '#b8cfe0' : street ? '#7c7f88' : '#2b3a55'
     g.fill()
     roundRect(pad - 2, pad - 2, s.width * scale + 4, s.length * scale + 4, r + 2)
-    g.fillStyle = '#f2c94c'
+    g.fillStyle = pond ? '#f7fbff' : street ? '#c9c9c9' : '#f2c94c'
     g.fill()
-    // ice
+    // the playing surface
     roundRect(pad, pad, s.width * scale, s.length * scale, r)
-    g.fillStyle = surfaceId === 'roller' ? '#d9dde6' : ICE
+    g.fillStyle = street ? '#3d4048' : pond ? '#cfe6f2' : surfaceId === 'roller' ? '#d9dde6' : pink ? '#ffd6ea' : ICE
     g.fill()
     g.save()
     roundRect(pad, pad, s.width * scale, s.length * scale, r)
     g.clip()
     const rnd = noise(7 + s.length)
     for (let i = 0; i < (s.width * s.length) / 18; i++) {
-      g.fillStyle = rnd() > 0.5 ? 'rgba(255,255,255,0.6)' : 'rgba(150,170,190,0.18)'
+      if (street) g.fillStyle = rnd() > 0.5 ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.18)'
+      else g.fillStyle = rnd() > 0.5 ? 'rgba(255,255,255,0.6)' : 'rgba(150,170,190,0.18)'
       g.fillRect(Math.floor(pad + rnd() * s.width * scale), Math.floor(pad + rnd() * s.length * scale), Math.ceil(rnd() * 3), 1)
     }
     const hline = (y, color, thick) => {
@@ -177,10 +180,36 @@ export class Renderer {
         }
       }
     }
+    if (street) {
+      // faded paint and a manhole cover
+      g.fillStyle = 'rgba(232,197,71,0.55)'
+      for (let y = 4; y < s.length - 4; y += 9) g.fillRect(Math.round(X(s.width / 2) - 1), Math.round(Y(y)), 2, Math.round(4 * scale))
+      g.fillStyle = '#2b2d33'
+      g.beginPath()
+      g.arc(X(s.width * 0.3), Y(s.length * 0.6), 2.5 * scale, 0, Math.PI * 2)
+      g.fill()
+    }
+    if (pond) {
+      // cracks in the ice
+      g.strokeStyle = 'rgba(120,160,190,0.5)'
+      g.lineWidth = 1
+      for (let i = 0; i < 6; i++) {
+        let x = X(rnd() * s.width)
+        let y = Y(rnd() * s.length)
+        g.beginPath()
+        g.moveTo(x, y)
+        for (let k = 0; k < 4; k++) {
+          x += (rnd() - 0.5) * 30
+          y += (rnd() - 0.5) * 30
+          g.lineTo(x, y)
+        }
+        g.stroke()
+      }
+    }
     // creases
     const net = this.rules ? this.rules.net : NETS.regulation
     const creaseR = net.width === 4 ? 4.5 : 6
-    for (const [ly, dir] of [
+    for (const [ly, dir] of pond || street ? [] : [
       [s.goalLine, 1],
       [s.length - s.goalLine, -1],
     ]) {
@@ -216,10 +245,11 @@ export class Renderer {
       for (let yy = Math.round(top) + 1; yy < top + nh; yy += 2) {
         for (let xx = Math.round(x0) + ((yy & 2) ? 1 : 0); xx < x1; xx += 2) g.fillRect(xx, yy, 1, 1)
       }
-      g.strokeStyle = RED
+      const frameColor = street ? '#ff7a1a' : pond ? '#8b5a2b' : RED
+      g.strokeStyle = frameColor
       g.lineWidth = 1
       g.strokeRect(Math.round(x0) + 0.5, Math.round(top) + 0.5, Math.round(x1 - x0) - 1, Math.round(nh) - 1)
-      g.fillStyle = RED
+      g.fillStyle = frameColor
       g.fillRect(Math.round(x0) - 1, Math.round(y0) - 1, 2, 2)
       g.fillRect(Math.round(x1) - 1, Math.round(y0) - 1, 2, 2)
     }
@@ -229,8 +259,28 @@ export class Renderer {
   }
 
   // the crowd texture outside the boards
-  drawStands(top, height) {
+  drawStands(top, height, surfaceId) {
     const g = this.ctx
+    if (surfaceId === 'pond' || surfaceId === 'street') {
+      // nobody came: snow and pine trees at the pond, lawns in the street
+      const pond = surfaceId === 'pond'
+      g.fillStyle = pond ? '#eef5fb' : '#3f6b35'
+      g.fillRect(0, top, this.W, height)
+      const r = noise(pond ? 41 : 43)
+      for (let i = 0; i < 70; i++) {
+        const x = Math.floor(r() * this.W)
+        const y = Math.floor(top + r() * height)
+        if (pond) {
+          g.fillStyle = '#2f5d3a'
+          g.fillRect(x, y, 3, 5)
+          g.fillRect(x - 1, y + 2, 5, 3)
+        } else {
+          g.fillStyle = r() > 0.5 ? '#4c7d41' : '#355c2d'
+          g.fillRect(x, y, 4, 2)
+        }
+      }
+      return
+    }
     g.fillStyle = '#141826'
     g.fillRect(0, top, this.W, height)
     const rnd = noise(99)
@@ -257,7 +307,7 @@ export class Renderer {
     const surface = SURFACES[snap.surface]
     const scale = this.scaleFor(surface)
     const homeCrest = this.teams ? this.teams.home.crest : null
-    const layer = this.rinkLayer(snap.surface, scale, homeCrest)
+    const layer = this.rinkLayer(snap.surface, scale, homeCrest, (snap.modifiers || []).includes('pink-ice'))
     const viewTop = this.viewTop
     const viewH = this.H - viewTop
     const rinkPxW = layer.w
@@ -284,7 +334,7 @@ export class Renderer {
     g.beginPath()
     g.rect(0, viewTop, this.W, viewH)
     g.clip()
-    this.drawStands(viewTop, viewH)
+    this.drawStands(viewTop, viewH, snap.surface)
     g.drawImage(layer.canvas, baseX, baseY)
     const SX = (x) => Math.round(baseX + layer.pad + x * scale)
     const SY = (y) => Math.round(baseY + layer.pad + y * scale)
@@ -292,9 +342,21 @@ export class Renderer {
     const ents = snap.skaters.slice().sort((a, b) => a.y - b.y)
     const puck = snap.puck
     let puckDrawn = false
+    // the puck on fire: a trail of embers
+    if (!this.trail) this.trail = []
+    this.trail.push({ x: puck.x, y: puck.y })
+    if (this.trail.length > 12) this.trail.shift()
     const drawPuck = () => {
       const px = SX(puck.x)
       const py = SY(puck.y)
+      if (o.fire) {
+        this.trail.forEach((p, i) => {
+          const k = i / this.trail.length
+          g.fillStyle = i % 2 ? `rgba(255,${Math.round(120 + k * 120)},40,${k})` : `rgba(255,230,90,${k * 0.8})`
+          const sz = 1 + Math.round(k * 3)
+          g.fillRect(SX(p.x) - Math.floor(sz / 2) + (i % 3) - 1, SY(p.y) - Math.floor(sz / 2) - 1, sz, sz)
+        })
+      }
       if (puck.z > 0.2) {
         g.fillStyle = 'rgba(0,0,0,0.25)'
         g.fillRect(px - 1, py, 3, 1)
@@ -331,7 +393,11 @@ export class Renderer {
   drawSkater(e, sx, sy, snap, dt) {
     const g = this.ctx
     const team = this.teams ? this.teams[e.side] : null
-    const kit = team ? team.kit : { jersey: '#888', trim: '#fff', stripe: '#444', number: '#fff', helmet: '#222', pants: '#222' }
+    let kit = team ? team.kit : { jersey: '#888', trim: '#fff', stripe: '#444', number: '#fff', helmet: '#222', pants: '#222' }
+    // a guest star wears their own look over the team kit
+    const look = e.look || null
+    if (look) kit = Object.assign({}, kit, look.jersey ? { jersey: look.jersey } : {}, look.trim ? { trim: look.trim } : {}, look.helmet ? { helmet: look.helmet } : {}, look.pants ? { pants: look.pants } : {})
+    const mods = snap.modifiers || []
     // stride animation from distance skated
     const last = this.lastPos.get(e.uid)
     const moved = last ? Math.hypot(e.x - last.x, e.y - last.y) : 0
@@ -341,11 +407,14 @@ export class Renderer {
     const frame = Math.floor(acc / 2.2) % 2
     const { view, flip } = this.viewFor(e, snap)
     const sprite = getSprite(kit, e.skin, view, e.goalie ? 0 : frame, e.number, e.goalie)
-    const w = SPRITE_W + 2
-    const h = SPRITE_H + 2
+    let scale = look && look.scale ? look.scale : 1
+    if (e.goalie && mods.includes('tiny-goalies')) scale = 0.6
+    const bigHead = mods.includes('big-heads') || (look && look.bigHead)
+    const w = Math.round((SPRITE_W + 2) * scale)
+    const h = Math.round((SPRITE_H + 2) * scale)
     // shadow
     g.fillStyle = 'rgba(20, 40, 70, 0.22)'
-    g.fillRect(sx - 4, sy - 1, 9, 2)
+    g.fillRect(sx - Math.round(4 * scale), sy - 1, Math.round(9 * scale), 2)
     // controlled marker under the feet
     if (e.controller && CONTROLLER_COLORS[e.controller]) {
       g.fillStyle = CONTROLLER_COLORS[e.controller]
@@ -355,7 +424,9 @@ export class Renderer {
     const stickBehind = view === 'up'
     const fx = Math.cos(e.dir)
     const fy = Math.sin(e.dir)
+    const stickColor = team && team.stickColor ? team.stickColor : '#a0522d'
     const drawStick = () => {
+      if (e.brokenStick) return
       if (e.goalie) {
         g.fillStyle = '#8b5a2b'
         const gx = sx + (view === 'up' ? -6 : 3)
@@ -363,48 +434,59 @@ export class Renderer {
         return
       }
       const hx = sx + (e.hand === 'L' ? -2 : 2)
-      const hy = sy - 6
-      const len = 7
-      g.fillStyle = '#a0522d'
+      const hy = sy - Math.round(6 * scale)
+      const len = Math.round(7 * scale)
+      g.fillStyle = stickColor
       for (let i = 0; i < len; i++) g.fillRect(Math.round(hx + fx * i), Math.round(hy + fy * i * 0.8 + i * 0.5), 1, 1)
       const bx = Math.round(hx + fx * len)
       const by = Math.round(hy + fy * len * 0.8 + len * 0.5)
       g.fillStyle = '#222222'
       g.fillRect(bx - 1, by, 3, 1)
     }
+    const top = sy - h + 1
     if (e.stun) {
       // knocked down: lying on the ice
       g.save()
       g.translate(sx, sy - 3)
       g.rotate(Math.PI / 2)
-      g.drawImage(sprite, -Math.floor(w / 2), -Math.floor(h / 2))
+      g.drawImage(sprite, -Math.floor(w / 2), -Math.floor(h / 2), w, h)
       g.restore()
       return
     }
     let jx = 0
     if (e.fighting) jx = Math.round(Math.sin(snap.t * 40 + e.uid) * 1.5)
     if (stickBehind) drawStick()
+    const drawBody = (dx) => {
+      g.drawImage(sprite, dx, top, w, h)
+      if (bigHead) {
+        // the head rows of the sprite, blown up
+        const hs = 1.9
+        const hw = Math.round((SPRITE_W + 2) * scale * hs)
+        const hh = Math.round(7 * scale * hs)
+        g.drawImage(sprite, 0, 0, SPRITE_W + 2, 7, dx + Math.round((w - hw) / 2), top - hh + Math.round(7 * scale), hw, hh)
+      }
+    }
     if (flip) {
       g.save()
       g.translate(sx + jx, 0)
       g.scale(-1, 1)
-      g.drawImage(sprite, -Math.floor(w / 2), sy - h + 1)
+      drawBody(-Math.floor(w / 2))
       g.restore()
     } else {
-      g.drawImage(sprite, sx + jx - Math.floor(w / 2), sy - h + 1)
+      drawBody(sx + jx - Math.floor(w / 2))
     }
     if (!stickBehind) drawStick()
     if (e.fighting) {
       // gloves on the ice and a scuffle cloud
       g.fillStyle = '#ffffff'
       const t = Math.floor(snap.t * 12) % 4
-      g.fillRect(sx - 6 + t, sy - h - 2, 2, 2)
-      g.fillRect(sx + 4 - t, sy - h, 2, 2)
+      g.fillRect(sx - 6 + t, top - 2, 2, 2)
+      g.fillRect(sx + 4 - t, top, 2, 2)
     }
     // player number over the controlled player
     if (e.controller && CONTROLLER_LABELS[e.controller]) {
       const color = CONTROLLER_COLORS[e.controller]
-      drawText(g, CONTROLLER_LABELS[e.controller], sx, sy - h - 8, color, { align: 'center', shadow: '#10131c' })
+      drawText(g, CONTROLLER_LABELS[e.controller], sx, top - (bigHead ? 18 : 9), color, { align: 'center', shadow: '#10131c' })
     }
   }
 

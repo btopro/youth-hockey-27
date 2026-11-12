@@ -98,38 +98,50 @@ const STICK_OFF_PUCK = [
 ]
 
 /**
- * Decide whether an action draws a call and which penalty it is.
+ * Was an action a penalty, and did the ref call it?
+ * Splitting the two is what lets a missed call start a brawl in the stands.
+ * The rates multiply out to the same call chances as before at 50% strictness.
  * @param {object} rules game rules (buildRules)
  * @param {string} action 'poke' | 'stick' | 'check'
  * @param {object} ctx { onCarrier: bool, fromBehind: bool, rng }
- * @returns {string|null} penalty id or null
+ * @returns {{ infraction: string|null, called: boolean }}
  */
 export const judgeAction = (rules, action, ctx) => {
-  if (!rules.penalties) return null
   const rng = ctx.rng
-  // 50% strictness = the base chances below, 100% doubles them
+  // 50% strictness calls at the base rate, 100% doubles it
   const scale = rules.strictness * 2
-  const roll = (base) => rng.chance(Math.min(0.95, base * scale))
+  const seen = (base) => rules.penalties && rng.chance(Math.min(0.95, base * scale))
+  let infraction = null
+  let base = 0
   if (action === 'poke') {
-    return roll(0.005) ? 'slashing' : null
-  }
-  if (action === 'stick') {
+    if (rng.chance(0.025)) {
+      infraction = 'slashing'
+      base = 0.2
+    }
+  } else if (action === 'stick') {
     if (ctx.onCarrier) {
-      return roll(0.15) ? rng.weighted(STICK_ON_CARRIER).id : null
+      if (rng.chance(0.3)) {
+        infraction = rng.weighted(STICK_ON_CARRIER).id
+        base = 0.5
+      }
+    } else {
+      infraction = rng.weighted(STICK_OFF_PUCK).id
+      base = 0.45
     }
-    return roll(0.45) ? rng.weighted(STICK_OFF_PUCK).id : null
-  }
-  if (action === 'check') {
+  } else if (action === 'check') {
     if (!rules.checking) {
-      return roll(0.8) ? 'body-checking' : null
+      infraction = 'body-checking'
+      base = 0.8
+    } else if (!ctx.onCarrier) {
+      infraction = 'interference'
+      base = 0.6
+    } else if (ctx.fromBehind) {
+      infraction = 'cross-checking'
+      base = 0.35
+    } else if (rng.chance(0.05)) {
+      infraction = 'roughing'
+      base = 0.5
     }
-    if (!ctx.onCarrier) {
-      return roll(0.6) ? 'interference' : null
-    }
-    if (ctx.fromBehind) {
-      return roll(0.35) ? 'cross-checking' : null
-    }
-    return roll(0.025) ? 'roughing' : null
   }
-  return null
+  return { infraction, called: !!infraction && seen(base) }
 }

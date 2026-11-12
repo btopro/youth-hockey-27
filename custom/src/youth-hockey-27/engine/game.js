@@ -7,7 +7,7 @@
 // the rink, y along it, with the top goal line at y = surface.goalLine.
 //
 // Usage:
-//   const game = new Game({ level: '10U', home: 'icers', away: 'saber-cats' })
+//   const game = new Game({ level: '10U', venue: 'rink', home: 'jesus-selects', away: 'd1-or-bust' })
 //   game.step(1 / 60, inputs)   // inputs: { [controllerId]: { x, y, pass, shoot, check, stick } }
 //   game.drainEvents()          // [{ type: 'goal', ... }, ...]
 //   game.snapshot()             // plain object for the renderer and replays
@@ -17,6 +17,7 @@ import { createRng } from './rng.js'
 import { PENALTIES, judgeAction } from './penalties.js'
 import { INTERMISSION_EVENTS } from './events.js'
 import { aiSkater, aiGoalie } from './ai.js'
+import { GUESTS, EQUIPMENT } from './cheats.js'
 
 export const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v))
 export const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y)
@@ -66,9 +67,67 @@ class Team {
       controller: null,
       stats: { goals: 0, assists: 0, shots: 0, passes: 0, hits: 0, pim: 0, toi: 0, touches: 0, possession: 0 },
     }))
-    // starting goalie is the first; the backup sits
+    this.applyLoadout(game)
+    // starting goalie is the first; the backup sits. No goalies at the pond.
     this.goalie = this.entities.find((e) => e.isGoalie)
-    this.goalie.onIce = true
+    this.goalie.onIce = game.rules.goalies
+  }
+
+  // venue boost, cheat-code equipment and a guest star
+  applyLoadout(game) {
+    const loadout = (game.opts.loadout && game.opts.loadout[this.side]) || {}
+    const boost = game.rules.boost || 0
+    const eq = loadout.equipment ? EQUIPMENT[loadout.equipment] : null
+    this.equipment = eq
+    const STATS = ['speed', 'shot', 'pass', 'hands', 'check', 'stamina', 'reflex', 'position']
+    for (const e of this.entities) {
+      for (const k of STATS) {
+        // the venue boost is for skaters; goalies stay human
+        let v = e.rating[k] + (e.isGoalie ? 0 : boost)
+        if (eq && eq.bonus[k] && !e.isGoalie) v += eq.bonus[k]
+        e.rating[k] = clamp(v, 20, 99)
+      }
+    }
+    const guest = loadout.guest ? GUESTS[loadout.guest] : null
+    if (guest) {
+      // the guest takes the place of the first forward and never leaves the ice
+      const e = this.entities.find((x) => x.player.position === 'F')
+      e.guest = guest.id
+      e.look = guest.look
+      e.player = Object.assign({}, e.player, {
+        first: guest.first,
+        last: guest.last,
+        name: guest.name,
+        number: guest.number,
+        skin: guest.look.skin || e.player.skin,
+        influence: 0,
+        coachability: 99,
+        curve: 'steady',
+      })
+      e.rating = Object.assign({ coachability: 99, influence: 0, overall: 95 }, guest.ratings)
+      e.exposure = 0
+      e.doubleShift = true
+    }
+  }
+
+  // positions for the skaters on the ice, so the AI can spread out:
+  // forwards C / LW / RW, defense LD / RD
+  assignRoles() {
+    const on = this.onIceSkaters()
+    const n = on.length
+    const wantD = n >= 4 ? 2 : 1
+    const ds = on.filter((e) => e.player.position === 'D')
+    const fs = on.filter((e) => e.player.position !== 'D')
+    while (ds.length > wantD) fs.push(ds.pop())
+    while (ds.length < wantD && fs.length > 1) ds.push(fs.pop())
+    const fRoles = fs.length === 1 ? ['C'] : fs.length === 2 ? ['C', 'W'] : ['C', 'LW', 'RW', 'W', 'W']
+    const dRoles = ds.length === 1 ? ['D'] : ['LD', 'RD', 'D']
+    fs.forEach((e, i) => {
+      e.role = fRoles[i] || 'W'
+    })
+    ds.forEach((e, i) => {
+      e.role = dRoles[i] || 'D'
+    })
   }
 
   skaters() {
@@ -137,6 +196,7 @@ class Team {
       }
     })
     this.lineTime = 0
+    this.assignRoles()
     // a leaving carrier drops the puck where they were
     const puck = this.game.puck
     if (puck.carrier && !puck.carrier.onIce) this.game.loosePuck(0, 0)
@@ -160,6 +220,7 @@ class Team {
       e.onIce = false
       if (this.game.puck.carrier === e) this.game.loosePuck(0, 0)
     }
+    this.assignRoles()
     this.game.reassignControllers()
   }
 }
@@ -191,12 +252,17 @@ export class Game {
     this.fight = null
     this.controllers = Object.assign({}, opts.controllers || {})
     this.uidCounter = 0
+    this.modifiers = (opts.loadout && opts.loadout.modifiers) || []
+    // one stick breaks every game, sometime in regulation
+    this.playTime = 0
+    this.stickBreakAt = this.rng.range(0.15, 0.85) * this.rules.periods * this.rules.periodSeconds
+    this.stickBroken = false
     this.control = {}
     const homeKit = opts.homeKit || 'home'
     let awayKit = opts.awayKit || 'away'
     this.teams = {
       home: new Team(this, 'home', opts.home || 'sparkle-selects', homeKit),
-      away: new Team(this, 'away', opts.away || 'icers', awayKit),
+      away: new Team(this, 'away', opts.away || 'jesus-selects', awayKit),
     }
     this.puck = {
       x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0,
@@ -378,6 +444,7 @@ export class Game {
 
   placeGoalie(team) {
     const g = team.goalie
+    if (!g || !g.onIce) return
     const s = this.rules.surface
     const netY = team.ownNetY()
     g.x = s.width / 2
@@ -452,6 +519,13 @@ export class Game {
   }
 
   doRestart() {
+    // anyone with a broken stick grabs a new one on the bench
+    for (const e of [...this.teams.home.entities, ...this.teams.away.entities]) {
+      if (e.brokenStick) {
+        e.brokenStick = false
+        this.emit('new-stick', { side: e.side, uid: e.uid })
+      }
+    }
     const r = this.nextRestart
     if (!r) {
       this.startFaceoff(this.centerDot())
@@ -544,12 +618,13 @@ export class Game {
 
   shoot(e, aimBias) {
     const p = this.puck
-    if (p.carrier !== e || e.cooldown.shot > 0) return
+    if (p.carrier !== e || e.cooldown.shot > 0 || e.brokenStick) return
     const team = this.teams[e.side]
     const net = this.netFor(e.side)
     const d = dist(e, { x: net.cx, y: net.lineY })
     const shotR = e.rating.shot + e.boost
-    const errorFt = (1 - shotR / 100) * 3.2 + d * 0.035 + (1 - this.rules.ai) * 0.6
+    let errorFt = (1 - shotR / 100) * 3.2 + d * 0.035 + (1 - this.rules.ai) * 0.6
+    if (e.controller) errorFt *= 0.55
     const half = this.rules.net.width / 2
     let aimX = net.cx + (aimBias || 0) * half * 0.7 + this.rng.range(-1, 1) * (half * 0.55 + errorFt)
     const onTarget = Math.abs(aimX - net.cx) < half - 0.25
@@ -561,7 +636,7 @@ export class Game {
     const power = (55 + shotR * 0.45) * this.rules.speed
     this.loosePuck((dx / len) * power, (dy / len) * power)
     p.vz = this.rng.range(2, 8)
-    p.shot = { uid: e.uid, side: e.side, power, rating: shotR, from: d, rolled: false, onTarget }
+    p.shot = { uid: e.uid, side: e.side, power, rating: shotR, from: d, rolled: false, onTarget, human: !!e.controller }
     this.setIcingWatch(e)
     e.cooldown.shot = 0.6
     e.cooldown.pickup = 0.35
@@ -574,7 +649,7 @@ export class Game {
 
   pass(e, to) {
     const p = this.puck
-    if (p.carrier !== e || e.cooldown.pass > 0 || !to) return
+    if (p.carrier !== e || e.cooldown.pass > 0 || !to || e.brokenStick) return
     const d = dist(e, to)
     const speed = clamp(d * 2.4 + 16, 22, (38 + (e.rating.pass + e.boost) * 0.32) * Math.sqrt(this.rules.speed))
     const t = d / speed
@@ -648,7 +723,7 @@ export class Game {
   }
 
   pokeCheck(e) {
-    if (e.cooldown.poke > 0) return
+    if (e.cooldown.poke > 0 || e.brokenStick) return
     e.cooldown.poke = 0.7
     const c = this.puck.carrier
     this.emit('poke', { side: e.side, uid: e.uid })
@@ -664,7 +739,7 @@ export class Game {
   }
 
   stickPlay(e, aimed) {
-    if (e.cooldown.stick > 0) return
+    if (e.cooldown.stick > 0 || e.brokenStick) return
     e.cooldown.stick = 0.9
     const target = aimed && dist(e, aimed) < 4.5 ? aimed : this.nearestOpponent(e, 4.5)
     this.emit('stick', { side: e.side, uid: e.uid, target: target ? target.uid : null })
@@ -714,12 +789,18 @@ export class Game {
   }
 
   judge(actor, action, target) {
-    const call = judgeAction(this.rules, action, {
+    const verdict = judgeAction(this.rules, action, {
       onCarrier: this.puck.carrier === target || (action === 'check' && target && this.puck.lastTouch && this.puck.lastTouch.uid === target.uid && !this.puck.carrier),
       fromBehind: target ? this.fromBehind(actor, target) : false,
       rng: this.rng,
     })
-    if (!call) return
+    if (!verdict.infraction) return
+    if (!verdict.called) {
+      // the ref missed it; the parents did not
+      this.emit('missed-call', { side: actor.side, uid: actor.uid, victim: target ? target.uid : null, penalty: verdict.infraction })
+      return
+    }
+    const call = verdict.infraction
     if (this.pending.some((p) => p.offender === actor)) return
     this.pending.push({ offender: actor, type: call, victim: target ? target.uid : null, at: this.time, action })
     this.emit('delayed-penalty', { side: actor.side, uid: actor.uid, penalty: call, action, human: !!actor.controller })
@@ -856,6 +937,28 @@ export class Game {
     }
   }
 
+  // the one broken stick of the game: whoever has the puck, or whoever is closest
+  breakStick() {
+    const p = this.puck
+    let e = p.carrier && !p.carrier.isGoalie ? p.carrier : null
+    if (!e) {
+      const near = this.allOnIce()
+        .filter((x) => !x.isGoalie)
+        .sort((a, b) => dist(a, p) - dist(b, p))
+      e = near[0]
+    }
+    if (!e) return
+    this.stickBroken = true
+    const team = this.teams[e.side]
+    if (team.equipment && team.equipment.unbreakable) {
+      this.emit('stick-held', { side: e.side, uid: e.uid })
+      return
+    }
+    e.brokenStick = true
+    if (p.carrier === e) this.loosePuck(e.vx * 0.3 + this.rng.range(-5, 5), e.vy * 0.3 + this.rng.range(-5, 5))
+    this.emit('stick-break', { side: e.side, uid: e.uid, number: e.player.number, name: e.player.name, x: e.x, y: e.y, exposure: e.exposure })
+  }
+
   // ---------- controllers ----------
 
   reassignControllers() {
@@ -936,6 +1039,8 @@ export class Game {
     }
     // play
     this.clock -= dt
+    this.playTime += dt
+    if (!this.stickBroken && this.playTime >= this.stickBreakAt) this.breakStick()
     this.updateBox(dt)
     if (this.rules.buzzer) {
       this.buzzerTimer -= dt
@@ -1230,6 +1335,7 @@ export class Game {
         if (p.shot) this.emit('post', { side: p.shot.side })
       }
     }
+    this.checkBlock(prevX, prevY)
     this.checkGoalie(dt)
     this.checkPickup()
     this.checkOffside(prevY)
@@ -1237,13 +1343,56 @@ export class Game {
     p.prevY = p.y
   }
 
+  // a skater in the lane can block a shot (once per skater per shot)
+  checkBlock(prevX, prevY) {
+    const p = this.puck
+    const s = p.shot
+    if (!s || p.carrier || s.blocked) return
+    if (!s.tried) s.tried = []
+    for (const e of this.teams[this.other(s.side)].onIceSkaters()) {
+      if (e.stun > 0 || s.tried.includes(e.uid)) continue
+      // distance from the skater to the puck's path this frame
+      const ax = prevX
+      const ay = prevY
+      const bx = p.x - ax
+      const by = p.y - ay
+      const l2 = bx * bx + by * by || 1
+      const t = clamp(((e.x - ax) * bx + (e.y - ay) * by) / l2, 0, 1)
+      if (Math.hypot(e.x - (ax + bx * t), e.y - (ay + by * t)) > 1.6) continue
+      s.tried.push(e.uid)
+      // pond hockey lives and dies on blocked shots
+      const chance = (this.rules.goalies ? 0.3 : 0.55) + (e.rating.position || 50) / 500
+      if (this.rng.chance(chance)) {
+        s.blocked = true
+        p.vx = p.vx * -0.25 + this.rng.range(-6, 6)
+        p.vy = p.vy * -0.25 + this.rng.range(-6, 6)
+        p.shot = null
+        p.lastTouch = { side: e.side, uid: e.uid, y: e.y }
+        this.emit('block', { side: e.side, uid: e.uid })
+        return
+      }
+    }
+  }
+
   checkGoalie() {
     const p = this.puck
     if (p.carrier) return
+    const tiny = this.modifiers.includes('tiny-goalies')
     for (const side of ['home', 'away']) {
-      const g = this.teams[side].goalie
       const net = this.ownNetFor(side)
-      const reach = 1.8 + g.rating.reflex / 70
+      let g = this.teams[side].goalie
+      let byCommittee = false
+      if (!g || !g.onIce) {
+        // no goalie (the pond): whoever is standing in the net mouth tries
+        const mouth = { x: net.cx, y: net.lineY + net.mouth * 2 }
+        g = this.teams[side]
+          .onIceSkaters()
+          .filter((x) => x.stun <= 0 && dist(x, mouth) < 5)
+          .sort((a, b) => dist(a, mouth) - dist(b, mouth))[0]
+        if (!g) continue
+        byCommittee = true
+      }
+      const reach = byCommittee ? 1.6 : (1.8 + g.rating.reflex / 70) * (tiny ? 0.55 : 1)
       const d = dist(g, p)
       if (d > reach) continue
       const toward = (net.lineY - p.y) * p.vy > 0
@@ -1253,6 +1402,10 @@ export class Game {
         const s = p.shot
         let pSave = this.rules.saveBase + (g.rating.reflex + g.rating.position - 120) * 0.0035 - (s.rating - 60) * 0.0028 + s.from * 0.004
         if (!s.onTarget) pSave += 0.25
+        // a person picked the spot; the CPU guessed
+        if (s.human) pSave -= 0.12
+        if (tiny) pSave -= 0.15
+        if (byCommittee) pSave = clamp(0.3 + (g.rating.position || 50) / 400, 0.2, 0.6)
         pSave = clamp(pSave, 0.28, 0.95)
         if (this.rng.chance(pSave)) {
           this.save(g, s)
@@ -1263,6 +1416,7 @@ export class Game {
         return
       }
       if (p.shot && p.shot.beat) continue
+      if (byCommittee) continue
       // loose puck in the crease: the goalie covers it or plays it, but not
       // the pass it just made
       if (!fast && d < reach && g.cooldown.pickup <= 0) {
@@ -1279,7 +1433,7 @@ export class Game {
     p.shot = null
     p.icing = null
     const team = this.teams[g.side]
-    if (this.rng.chance(this.rules.faceoffs ? 0.4 : 0.35)) {
+    if (g.isGoalie && this.rng.chance(this.rules.faceoffs ? 0.4 : 0.35)) {
       this.goalieTakes(g)
       return
     }
@@ -1327,7 +1481,7 @@ export class Game {
     let best = null
     let bd = Infinity
     for (const e of this.allOnIce()) {
-      if (e.isGoalie || e.stun > 0 || e.fighting || e.cooldown.pickup > 0) continue
+      if (e.isGoalie || e.stun > 0 || e.fighting || e.cooldown.pickup > 0 || e.brokenStick) continue
       const intended = p.pass && p.pass.to === e.uid
       const reach = PUCK_REACH + e.rating.hands / 120 + (intended ? 1 : 0)
       const d = dist(e, p)
@@ -1424,7 +1578,7 @@ export class Game {
       away: this.teams.away.score,
     })
     if (scorer) {
-      this.maybeStandsFight(scorer, opp.goalie, 0.06)
+      if (opp.goalie && opp.goalie.onIce) this.maybeStandsFight(scorer, opp.goalie, 0.06)
     }
     this.phase = 'goal'
     this.phaseTimer = 2.6
@@ -1462,7 +1616,8 @@ export class Game {
       // shootout, settled by the shooters and the goalies
       const homeR = this.teams.home.skaters().reduce((s, e) => s + e.rating.shot, 0) / this.teams.home.skaters().length
       const awayR = this.teams.away.skaters().reduce((s, e) => s + e.rating.shot, 0) / this.teams.away.skaters().length
-      const homeWins = this.rng.chance(clamp(0.5 + (homeR - this.teams.away.goalie.rating.reflex - (awayR - this.teams.home.goalie.rating.reflex)) * 0.01, 0.2, 0.8))
+      const gr = (t) => (t.goalie && t.goalie.onIce ? t.goalie.rating.reflex : 40)
+      const homeWins = this.rng.chance(clamp(0.5 + (homeR - gr(this.teams.away) - (awayR - gr(this.teams.home))) * 0.01, 0.2, 0.8))
       this.emit('shootout', { winner: homeWins ? 'home' : 'away' })
       this.endGame('shootout', homeWins ? 'home' : 'away')
       return
@@ -1474,6 +1629,20 @@ export class Game {
     this.phase = 'intermission'
     const side = this.opts.focusSide || 'home'
     const team = this.teams[side]
+    if (!this.rules.crowd) {
+      // nobody came to the pond or the street, so nobody makes it weird
+      this.intermission = {
+        id: 'quiet',
+        side,
+        subject: null,
+        title: 'Hot chocolate break',
+        body: 'Nobody came to watch. No refs, no scoreboard operator, no parents. Everyone is having a great time.',
+        choices: ['Back out there'],
+      }
+      this.emit('intermission', Object.assign({}, this.intermission))
+      if (this.opts.autoIntermission) this.chooseIntermission(0)
+      return
+    }
     const ev = this.rng.weighted(INTERMISSION_EVENTS)
     const subject = ev.subject(team) || null
     this.intermission = {
@@ -1491,14 +1660,17 @@ export class Game {
   chooseIntermission(index) {
     if (!this.intermission) return null
     const ev = INTERMISSION_EVENTS.find((x) => x.id === this.intermission.id)
-    const choice = ev.choices[clamp(index, 0, ev.choices.length - 1)]
     const team = this.teams[this.intermission.side]
     const subject = this.intermission.subject ? this.findEntity(this.intermission.subject) : null
+    // the quiet break has nothing to choose
+    const choice = ev
+      ? ev.choices[clamp(index, 0, ev.choices.length - 1)]
+      : { label: 'Back out there', result: () => 'Back out there.', apply: () => {} }
     choice.apply(this, team, subject)
     this.crowd.mood = clamp(this.crowd.mood, 0, 1)
     team.chemistry = clamp(team.chemistry, -0.3, 0.5)
     const result = choice.result(subject)
-    this.emit('intermission-choice', { id: ev.id, choice: choice.label, result })
+    this.emit('intermission-choice', { id: this.intermission.id, choice: choice.label, result })
     this.intermission = null
     this.period++
     this.clock = this.rules.periodSeconds
@@ -1545,6 +1717,10 @@ export class Game {
       puck: p.carrier === e,
       controller: e.controller,
       exposure: e.exposure,
+      role: e.role || null,
+      brokenStick: !!e.brokenStick,
+      guest: e.guest || null,
+      look: e.look || null,
     }))
     return {
       t: this.time,
@@ -1562,6 +1738,8 @@ export class Game {
       },
       delayed: this.pending.length ? this.pending[0].offender.side : null,
       dir: { home: this.teams.home.attackDir(), away: this.teams.away.attackDir() },
+      modifiers: this.modifiers,
+      venue: this.rules.venue,
     }
   }
 

@@ -84,7 +84,7 @@ Yes, plus fights
 
 Yes
 
-Game length, skating speed and how good the CPU is all go up with age. At the small-ice levels a buzzer goes off every minute and a half or two, and everybody changes, so everybody plays.
+Every period is five minutes. Skating speed and how good the CPU is all go up with age. At the small-ice levels a buzzer goes off every minute and a half or two, and everybody changes, so everybody plays.
 
 There's no scoreboard at 8U and 10U. When a kid scores, their parents wave dollar bills in the stands instead.
 
